@@ -1,4 +1,5 @@
 from app import db
+from werkzeug.security import generate_password_hash
 
 class Car(db.Model):
 
@@ -30,7 +31,7 @@ class Car(db.Model):
         self.photo = photo
 
 
-class Favourites(db.Model):
+class Favourite(db.Model):
 
     __tablename__ = 'favourites'
 
@@ -43,7 +44,7 @@ class Favourites(db.Model):
         self.carId = carId
 
 
-class Users(db.Model):
+class User(db.Model):
 
     __tablename__ = 'users'
 
@@ -59,7 +60,7 @@ class Users(db.Model):
 
     def _init__(self, username, password, name, email, location, biography, photo):
         self.username = username
-        self.password = password
+        self.password = generate_password_hash(password, method='pbkdf2:sha256')
         self.name = name
         self.email = email
         self.location = location
