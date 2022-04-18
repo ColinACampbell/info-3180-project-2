@@ -66,4 +66,22 @@ class Users(db.Model):
         self.location = location
         self.biography = biography
         self.photo = photo
-        # date_joined = db.Column(db.DateTime) set the date joined when the constructor is called
+        # date_joined = db.Column(db.DateTime)  set the date joined when the constructor is called
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        try:
+            return unicode(self.id)  # python 2 support
+        except NameError:
+            return str(self.id)  # python 3 support
+
+    def __repr__(self):
+        return '<User %r>' % (self.username)
