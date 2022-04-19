@@ -1,6 +1,6 @@
 <template>
 
- <form @submit.prevent="default" id="loginForm" method="POST" enctype="multipart/form-data">'
+ <form @submit.prevent="login" id="loginForm" method="POST" enctype="multipart/form-data">'
 
 	<label class="label" for="username">Username</label>
     <input type="text" name="name" id="name" class="form-control" placeholder="Enter your Username"/>
@@ -55,6 +55,7 @@ export default {
             this.getCsrfToken();
         }
     }
+}
 </script>
 
 <style>
