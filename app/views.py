@@ -10,7 +10,7 @@ from flask import render_template, request, jsonify,url_for, send_file, redirect
 import os
 from app import app 
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import LoginForm
+from app.forms import LoginForm,CreateUserForm, PicForm,AddCarForm
 from app.models import UserProfile
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
@@ -57,7 +57,7 @@ def login():
 
 @app.route('/api/register', methods=['POST'])
 def register():
-    createuser = UserForm()
+    createuser = CreateUserForm()
    
     if request.method == 'POST':
         createuser.username.data = request.form['username']
@@ -115,13 +115,13 @@ def addcars():
             colour = request.addcar['colour']
             year = request.addcar['year']
             transmission = request.addcar['transmission']
-            car_type = request.addcar['car_type']
+            cartype = request.addcar['cartype']
             price = request.addcar['price']
             file = request.files['photo']
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            mycar = Car(make, description, model, colour, year, transmission, car_type,price, filename)
+            mycar = Car(make, description, model, colour, year, transmission, cartype,price, filename)
             db.session.add(mycar)
             db.session.commit()
 
