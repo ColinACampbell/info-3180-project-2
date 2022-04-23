@@ -2,21 +2,30 @@
 export default {
     data() {
         return {
-            message: "Hello World! This is Lab 7"
+            message: "Find A Car"
         };
     },
 }
 </script>
 
 <template>
-    <div class="container">
-      <div class="text-center">
-        <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-        <h1>{{ message }}</h1>
+    <div id="home" class="container">
+      <div class="text-center align-middle">
+        <h1 class="text-warning">{{ message }}</h1>
       </div>
     </div>
 </template>
 
 <style>
 /* Add any component specific styles here */
+#home { 
+  width: 100%;
+  height: 100%;
+  
+  background-image: url(https://images.pexels.com/photos/7230049/pexels-photo-7230049.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 </style>

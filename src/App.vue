@@ -18,4 +18,8 @@ import AppFooter from "@/components/AppFooter.vue";
 body {
   padding-top: 75px;
 }
+main{
+  width: 100vh;
+  height: 100vh;
+}
 </style>
