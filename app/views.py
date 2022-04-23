@@ -97,13 +97,13 @@ def login():
 
             if user is not None and check_password_hash(user.password, password):
                 encoded_jwt = createToken(user)
-                return {"message": [], "token": encoded_jwt}
+                return {"message": [], "token": encoded_jwt},200
             else:
-                return {"message": ['Incorrect credentials']}
+                return {"message": ['Incorrect credentials']},401
     else:
         return {
             "message": form_errors(form)
-        }
+        }, 400
 
 
 @app.route('/api/register', methods=['POST'])
@@ -132,13 +132,13 @@ def register():
 
             encoded_jwt = createToken(user)
 
-            return {"message": [], "token": encoded_jwt}
+            return {"message": [], "token": encoded_jwt},201
         else:
-            return {"message": ['User exists']}
+            return {"message": ['User exists']}, 409
     else:
         return {
             "message": form_errors(createUserForm)
-        }
+        },400
 
 
 @app.route('/api/csrf-token', methods=['GET'])
@@ -147,13 +147,14 @@ def get_csrf():
 
 
 @app.route('/api/cars/<car_id>', methods=['GET'])
+@requires_auth
 def cardetail(car_id):
     return jsonify(Car.query.filter_by(id=car_id).first())
 
 @app.route('/api/cars', methods=['GET'])
+@requires_auth
 def returncars():
     return  jsonify(Car.query.all())
-
 
 @app.route('/api/cars', methods=['POST'])
 @requires_auth
@@ -184,16 +185,25 @@ def addcars():
             db.session.add(mycar)
             db.session.commit()
 
-            return jsonify(Car.query.filter_by(id=mycar.id).first())
+            return jsonify(Car.query.filter_by(id=mycar.id).first()),201
         else:
             return {
                 'message': form_errors(addCarForm)
-            }
+            },400
 
 
-@app.route('/api/cars/{car_id}/favourites', methods=['POST'])
-def favcar():
-    return car
+@app.route('/api/cars/<car_id>/favourites', methods=['POST'])
+@requires_auth
+def favcar(car_id):
+    if (Favourite.query.filter_by(carId=car_id).first() != None) :
+        db.session.delete(Favourite.query.filter_by(carId=car_id).first())
+        db.session.commit()
+        return {}
+    else :
+        fav = Favourite(g.current_user['id'],car_id)
+        db.session.add(fav)
+        db.session.commit()
+        return jsonify(fav),201 # TODO Return the car
 
 
 @app.route('/api/searh', methods=['GET'])
@@ -206,9 +216,15 @@ def userdetails():
     return car
 
 
-@app.route('/api/users/{user_id}/favourites', methods=['GET'])
-def userfavs():
-    return car
+@app.route('/api/users/<user_id>/favourites', methods=['GET'])
+def userfavs(user_id):
+    favs = Favourite.query.filter_by(userId=user_id).all()
+    fav_cars = []
+    for fav in favs :
+        fav_car = Car.query.filter_by(id=fav.carId).first()
+        fav_cars.append(fav_car)
+    
+    return jsonify(fav_cars)
 
 # Here we define a function to collect form errors from Flask-WTF
 # which we can later use
@@ -250,7 +266,7 @@ def add_header(response):
 @app.errorhandler(404)
 def page_not_found(error):
     """Custom 404 page."""
-    return render_template('404.html'), 404
+    return {"message":['Endpoint not found']}
 
 
 if __name__ == '__main__':

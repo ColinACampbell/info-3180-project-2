@@ -50,6 +50,9 @@ class Car(db.Model):
 @dataclass
 class Favourite(db.Model):
 
+    id:int
+    carId:int
+    
     __tablename__ = 'favourites'
 
     id = db.Column(db.Integer, primary_key=True)
