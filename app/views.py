@@ -200,6 +200,11 @@ def favcar(car_id):
         db.session.commit()
         return {}
     else :
+        car = Car.query.filter_by(id=car_id).first()
+
+        if (car == None) :
+            return {'message':'Car does not exists'},400
+
         fav = Favourite(g.current_user['id'],car_id)
         db.session.add(fav)
         db.session.commit()
