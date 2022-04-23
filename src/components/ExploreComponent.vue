@@ -56,8 +56,7 @@
             searchCars() {
                 let self = this;
                 fetch('/api/cars'+ self.searchCars + '&language=en', {
-                    headers: {
-                        'Authorization': `Bearer ${import.meta.env.VITE_NEWSAPI_TOKEN}`,
+                    headers: authHeader(),
                 }
             }).then(function(response) {
                 return response.json();
@@ -82,6 +81,16 @@
         });
         }
     };
+
+    function authHeader() {
+    let accessToken = localStorage.getItem("jwt");
+
+    if (accessToken) {
+        return { Authorization: "Bearer " + accessToken };
+    } else {
+        return {};
+    }
+}
 </script>
 
 <style>

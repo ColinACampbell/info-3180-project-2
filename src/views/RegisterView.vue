@@ -1,5 +1,5 @@
 <script>
-import registerForm from './../components/RegisterForm.vue'
+import LoginForm from "@/components/RegisterForm.vue";
 
     export default {
         data() {
