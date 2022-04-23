@@ -1,4 +1,5 @@
 import string
+from xmlrpc.client import DateTime
 from app import db
 from werkzeug.security import generate_password_hash
 from datetime import date
@@ -52,7 +53,7 @@ class Favourite(db.Model):
 
     id:int
     carId:int
-    
+
     __tablename__ = 'favourites'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -68,6 +69,15 @@ class Favourite(db.Model):
 class User(db.Model):
 
     __tablename__ = 'users'
+
+    id :int
+    username :string
+    name:string
+    email :string
+    location:string
+    biography :string
+    photo:string
+    date_joined : DateTime
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80))

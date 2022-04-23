@@ -216,12 +216,17 @@ def searchcars():
     return car
 
 
-@app.route('/api/users/{user_id}', methods=['GET'])
-def userdetails():
-    return car
+@app.route('/api/users/<user_id>', methods=['GET'])
+@requires_auth
+def userdetails(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    if (user == None) :
+        return {'message':['User Does not exists']},400
+    return jsonify(user)
 
 
 @app.route('/api/users/<user_id>/favourites', methods=['GET'])
+@requires_auth
 def userfavs(user_id):
     favs = Favourite.query.filter_by(userId=user_id).all()
     fav_cars = []
