@@ -85,7 +85,7 @@ def logout():
 @app.route("/api/auth/login", methods=["POST"])
 def login():
     form = LoginForm()
-    if request.method == "POST" and form.validate_on_submit():
+    if form.validate_on_submit():
         if form.username.data:
             username = form.username.data
             password = form.password.data
@@ -93,14 +93,17 @@ def login():
             user = User.query.filter_by(username=username).first()
 
             if user is not None and check_password_hash(user.password, password):
-                login_user(user)
-                flash("Successful login! ", "success")
-                return redirect(url_for(""))
+                #login_user(user)
+                #flash("Successful login! ", "success")
+                #return redirect(url_for(""))
+                encoded_jwt = createToken(user)
+                return {"message": [], "token": encoded_jwt}
             else:
-                flash("Login denied. Try again!", "danger")
-
-            return redirect(url_for("index"))
-    return render_template("login.html", form=form)
+                return {"message":['Incorrect credentials']}
+    else :
+        return {
+            "message": form_errors(form)
+        }
 
 
 @app.route('/api/register', methods=['POST'])
