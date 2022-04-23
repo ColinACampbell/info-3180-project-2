@@ -75,11 +75,11 @@ def register():
             app.config['UPLOAD_FOLDER'], secure_filename(photo.filename))
         photo.save(file_path)
 
-        if User.query.filter_by(username=username).first() == None and User.query.filter_by(email=email).first():
+        if User.query.filter_by(username=username).first() == None and User.query.filter_by(email=email).first() == None:
             user = User(username=username, password=password, name=name,
                         email=email, location=location, biography=bio, photo=file_path)
             db.session.add(user)
-            db.session.commit(user)
+            db.session.commit()
 
             return {"message": ['Ok']} 
         else : 
@@ -90,45 +90,6 @@ def register():
         }
 
     return {"message": []}
-    '''
-    if request.method == 'POST':
-        createuser.username.data = request.form['username']
-        createuser.password.data = request.form['password']
-        createuser.firstname.data = request.form['firstname']
-        createuser.lastname.data = request.form['lastname']
-        createuser.emailaddress.data = request.form['emailaddress']
-        createuser.location.data = request.form['location']
-        createuser.bio.data = request.form['bio']
-        createuser.photo.data = request.files['photo']
-        
-        if createuser.validate_on_submit():
-            username = createuser.username.data
-            password = createuser.password.data
-            firstname = createuser.firstname.data
-            lastname = createuser.lastname.data
-            emailaddress = createuser.emailaddress.data
-            location = createuser.location.data
-            bio = createuser.bio.data
-            photo = createuser.profile_photo.data
-
-            filename = secure_filename(photo.filename)
-            dbuser = User(username, password, firstname, lastname, emailaddress, location, bio, filename)
-            db.session.add(dbuser)
-            db.session.commit()
-            profile_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            Formdata = {
-            "message": "File upload was successful!",
-            "filename": filename,
-            }
-            return jsonify(formdata=formdata)
-        else:
-            errordata = {
-            "errors": [{"filename":form_errors(createuser)}]
-        }
-        return jsonify(errordata=errordata)
-
-        '''
-
 
 @app.route('/api/csrf-token', methods=['GET'])
 def get_csrf():
