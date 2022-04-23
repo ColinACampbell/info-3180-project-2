@@ -1,6 +1,5 @@
 <template>
-
- <form @submit.prevent="login" id="loginForm" method="POST" enctype="multipart/form-data">'
+ <form @submit.prevent="login" id="loginForm" method="POST" enctype="multipart/form-data">
 
 	<label class="label" for="username">Username</label>
     <input type="text" name="username" id="username" class="form-control" placeholder="Enter your Username"/>
@@ -13,11 +12,10 @@
 </template>
 
 <script>
-
 export default {
         data() {
             return {
-                csrf_token: '',
+                csrf_token: "",
             }
         },
         methods: {
@@ -27,7 +25,9 @@ export default {
                 let loginForm = document.getElementById('loginForm');
                 let form_data = new FormData(loginForm);
 
-                fetch("${import.meta.env.VITE_API_URL}/api/auth/login", {method: 'POST', body: form_data
+                fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+                    method: "POST",
+                    body: form_data,
                 }).then(function (response) {
                     return response.json();
                 }).then(function (data) {

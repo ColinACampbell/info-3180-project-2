@@ -6,11 +6,25 @@
     <div class="search-cars">
       <div class="inputs">
         <label class="model" for="make">Make</label>
-        <input type="search" name="make" v-model="searchTermMake" v-on:change="empty" id="make" class="search-input"/>
+        <input
+          type="search"
+          name="make"
+          v-model="searchTermMake"
+          v-on:change="empty"
+          id="make"
+          class="search-input"
+        />
       </div>
       <div class="inputs">
         <label class="model" for="model">Model</label>
-        <input type="search" name="model" v-model="searchTermModel" v-on:change="empty" id="model" class="search-input"/>
+        <input
+          type="search"
+          name="model"
+          v-model="searchTermModel"
+          v-on:change="empty"
+          id="model"
+          class="search-input"
+        />
       </div>
       <button class="btn-search" @click="searchCars">Search</button>
     </div>
@@ -45,11 +59,12 @@
 </template>
 
 <script>
+<<<<<<< HEAD
     export default {
         data() {
             return {
                 cars: [],
-                searchCars: ''
+                searchCars: ""
             };
         },
         methods: {
@@ -81,14 +96,14 @@
         }
     };
 
-    function authHeader() {
-    let accessToken = localStorage.getItem("jwt");
+function authHeader() {
+  let accessToken = localStorage.getItem("jwt");
 
-    if (accessToken) {
-        return { Authorization: "Bearer " + accessToken };
-    } else {
-        return {};
-    }
+  if (accessToken) {
+    return { Authorization: "Bearer " + accessToken };
+  } else {
+    return {};
+  }
 }
 </script>
 
