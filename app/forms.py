@@ -9,8 +9,8 @@ from wtforms.validators import DataRequired
 class CreateUserForm(FlaskForm):
     username = StringField('username', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
-    name = StringField('name', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired()])
+    name = StringField('name', validators=[DataRequired()])
     location = StringField('location', validators=[DataRequired()])
     bio = TextAreaField('bio', validators=[DataRequired()])
     photo = FileField('photo', validators=[FileRequired(), FileAllowed(
@@ -38,7 +38,13 @@ class AddCarForm(FlaskForm):
     carphoto = FileField('carphoto', validators=[FileRequired(), FileAllowed(
         ['jpg', 'png', 'jpeg', 'Please upload images only.'])])
 
+    class Meta:
+        csrf = False
+
 
 class LoginForm(FlaskForm):
     username = StringField('username', validators=[DataRequired()])
     password = PasswordField('password', validators=[DataRequired()])
+
+    class Meta:
+        csrf = False

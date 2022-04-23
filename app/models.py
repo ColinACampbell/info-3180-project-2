@@ -51,7 +51,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80))
-    password = db.Column(db.String(80))
+    password = db.Column(db.String(400))
     name = db.Column(db.String(80))
     email = db.Column(db.String(100))
     location = db.Column(db.String(500))
@@ -59,7 +59,7 @@ class User(db.Model):
     photo = db.Column(db.String(100))
     date_joined = db.Column(db.DateTime)
 
-    def _init__(self, username, password, name, email, location, biography, photo):
+    def _init__(self, username, password, name, email, location, biography, photo,date_joined):
         self.username = username
         self.password = generate_password_hash(password, method='pbkdf2:sha256')
         self.name = name
@@ -67,4 +67,4 @@ class User(db.Model):
         self.location = location
         self.biography = biography
         self.photo = photo
-        self.date_joined = date.today()
+        self.date_joined = date_joined

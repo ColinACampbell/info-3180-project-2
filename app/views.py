@@ -13,11 +13,11 @@ import os
 from app import app, db
 from flask_login import login_user, logout_user, current_user, login_required
 from app.forms import LoginForm, CreateUserForm, AddCarForm
-from app.models import User
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from flask_wtf.csrf import generate_csrf
 from functools import wraps
+from datetime import date
 
 
 def createToken(user):
@@ -93,9 +93,6 @@ def login():
             user = User.query.filter_by(username=username).first()
 
             if user is not None and check_password_hash(user.password, password):
-                #login_user(user)
-                #flash("Successful login! ", "success")
-                #return redirect(url_for(""))
                 encoded_jwt = createToken(user)
                 return {"message": [], "token": encoded_jwt}
             else:
@@ -124,8 +121,9 @@ def register():
         photo.save(file_path)
 
         if User.query.filter_by(username=username).first() == None and User.query.filter_by(email=email).first() == None:
-            user = User(username=username, password=password, name=name,
-                        email=email, location=location, biography=bio, photo=file_path)
+
+            user = User(username=username, password=generate_password_hash(password, method='pbkdf2:sha256'), name=name,
+                        email=email, location=location, biography=bio, photo=file_path,date_joined=date.today())
             db.session.add(user)
             db.session.commit()
 
