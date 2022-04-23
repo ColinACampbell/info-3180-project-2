@@ -146,9 +146,13 @@ def get_csrf():
     return jsonify({'csrf_token': generate_csrf()})
 
 
+@app.route('/api/cars/<car_id>', methods=['GET'])
+def cardetail(car_id):
+    return jsonify(Car.query.filter_by(id=car_id).first())
+
 @app.route('/api/cars', methods=['GET'])
 def returncars():
-    return car
+    return  jsonify(Car.query.all())
 
 
 @app.route('/api/cars', methods=['POST'])
@@ -180,16 +184,11 @@ def addcars():
             db.session.add(mycar)
             db.session.commit()
 
-            return {"car":Car.query.filter_by(id=mycar.id).first()}
+            return jsonify(Car.query.filter_by(id=mycar.id).first())
         else:
             return {
                 'message': form_errors(addCarForm)
             }
-
-
-@app.route('/api/cars/{car_id}', methods=['GET'])
-def cardetail():
-    return car
 
 
 @app.route('/api/cars/{car_id}/favourites', methods=['POST'])
