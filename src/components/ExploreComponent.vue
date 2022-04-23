@@ -1,24 +1,47 @@
 <template>
-    <form @submit.prevent="searchCars" class="d-flex flex-column justify-content-center">
-        <div class="input-group mx-sm-3 mb-2">
-            <label class="visually-hidden" for="search">Search</label>
-            <input type="search" name="search" v-model="searchCar" id="search" class="form-control mb-2 mr-sm-2" placeholder="Search here" />
-            <button class="btn btn-primary mb-2">Search</button>
-        </div>
-        <p>You are searching for {{ searchCar }}</p>
-    </form>
-    <ul class="car-list">
-        <li v-for="car in cars" class="car-view">
-         <img :src="car.urlToImage" :alt="car.model" />
-         <p class="car-make">{{ car.make }}</p>
-         <p class="car-model">{{ car.model }}</p>
-         <p class="car-year">{{ car.year }}</p>
-         <p class="car-price">{{ car.price }}</p>
-         <p class="car-description">{{ car.description }}</p>
+  <section id="explore-page">
+    <div class="heading">
+      <h1>Explore</h1>
+    </div>
+    <div class="search-cars">
+      <div class="inputs">
+        <label class="model" for="make">Make</label>
+        <input type="search" name="make" v-model="searchTermMake" v-on:change="empty" id="make" class="search-input"/>
+      </div>
+      <div class="inputs">
+        <label class="model" for="model">Model</label>
+        <input type="search" name="model" v-model="searchTermModel" v-on:change="empty" id="model" class="search-input"/>
+      </div>
+      <button class="btn-search" @click="searchCars">Search</button>
+    </div>
+
+    <div class="car-cards">
+      <ul class="cars-lst">
+        <li v-for="car in currentCars" :key="car.id">
+          <div class="car-card">
+            <div class="photo">
+              <img :src="API_ENDPOINT + '/uploads/' + car.photo" alt="car" />
+            </div>
+            <div class="car-info">
+              <div>
+                <span class="name-and-price">
+                  <p class="year-and-make">{{ car.year + " " + car.make }}</p>
+                  <span class="car-price">
+                    <img class="tags" src="../assets/tag.svg" alt="tag" />
+                    <p>${{ car.price }}</p>
+                  </span>
+                </span>
+                <p class="car-model">{{ car.model }}</p>
+              </div>
+            </div>
+            <button @click="getCar(car.id)" class="btn-details">
+              View More Details
+            </button>
+          </div>
         </li>
-    </ul>
-
-
+      </ul>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -32,7 +55,7 @@
         methods: {
             searchCars() {
                 let self = this;
-                fetch(''+ self.searchCars + '&language=en', {
+                fetch('/api/cars'+ self.searchCars + '&language=en', {
                     headers: {
                         'Authorization': `Bearer ${import.meta.env.VITE_NEWSAPI_TOKEN}`,
                 }
@@ -46,7 +69,7 @@
         },
         created() {
             let self = this;
-            fetch(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${import.meta.env.VITE_NEWSAPI_TOKEN}`,
+            fetch(`/api/cars=us&apiKey=${import.meta.env.VITE_NEWSAPI_TOKEN}`,
             {
             headers: {
                 'Authorization': `Bearer ${import.meta.env.VITE_NEWSAPI_TOKEN}`
