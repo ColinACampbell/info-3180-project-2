@@ -1,5 +1,6 @@
 from app import db
-
+from werkzeug.security import generate_password_hash
+from datetime import date
 
 class Car(db.Model):
 
@@ -31,7 +32,7 @@ class Car(db.Model):
         self.photo = photo
 
 
-class Favourites(db.Model):
+class Favourite(db.Model):
 
     __tablename__ = 'favourites'
 
@@ -60,10 +61,10 @@ class User(db.Model):
 
     def _init__(self, username, password, name, email, location, biography, photo):
         self.username = username
-        self.password = password
+        self.password = generate_password_hash(password, method='pbkdf2:sha256')
         self.name = name
         self.email = email
         self.location = location
         self.biography = biography
         self.photo = photo
-        # date_joined = db.Column(db.DateTime) set the date joined when the constructor is called
+        self.date_joined = date.today()

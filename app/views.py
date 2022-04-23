@@ -5,17 +5,16 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file creates your application.
 """
 
-from app import app, db  # , login_manager
-from flask import render_template, request, jsonify, url_for, send_file, redirect, flash
+from flask import render_template, request, jsonify, send_file
+from app.models import User, Favourite, Car
 import os
-from app import app
+from app import app, db
 from flask_login import login_user, logout_user, current_user, login_required
 from app.forms import LoginForm, CreateUserForm, AddCarForm
 from app.models import User
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from flask_wtf.csrf import generate_csrf
-
 ###
 # Routing for your application.
 ###
@@ -25,10 +24,11 @@ from flask_wtf.csrf import generate_csrf
 def index():
     return send_file(os.path.join('../dist/', 'index.html'))
 
-
 ###
 # The functions below should be applicable to all Flask apps.
 ###
+
+
 @app.route("/api/auth/logout", methods=["POST"])
 @login_required
 def logout():
@@ -62,13 +62,33 @@ def login():
 def register():
     createUserForm = CreateUserForm()
     if (createUserForm.validate_on_submit()):
-        pass
+
+        username = createUserForm.username.data
+        password = createUserForm.password.data
+        name = createUserForm.name.data
+        email = createUserForm.email.data
+        location = createUserForm.location.data
+        bio = createUserForm.bio.data
+        photo = createUserForm.photo.data
+
+        file_path = os.path.join(
+            app.config['UPLOAD_FOLDER'], secure_filename(photo.filename))
+        photo.save(file_path)
+
+        if User.query.filter_by(username=username).first() == None and User.query.filter_by(email=email).first():
+            user = User(username=username, password=password, name=name,
+                        email=email, location=location, biography=bio, photo=file_path)
+            db.session.add(user)
+            db.session.commit(user)
+
+            return {"message": ['Ok']} 
+        else : 
+            return {"message": ['User Exists']} 
     else:
         return {
-            "message": createUserForm.errors.items()
+            "message": form_errors(createUserForm)
         }
 
-    print("Method runs")
     return {"message": []}
     '''
     if request.method == 'POST':
@@ -106,7 +126,13 @@ def register():
             "errors": [{"filename":form_errors(createuser)}]
         }
         return jsonify(errordata=errordata)
+
         '''
+
+
+@app.route('/api/csrf-token', methods=['GET'])
+def get_csrf():
+    return jsonify({'csrf_token': generate_csrf()})
 
 
 @app.route('/api/cars', methods=['GET'])
