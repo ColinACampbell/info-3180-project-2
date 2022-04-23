@@ -5,6 +5,7 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file creates your application.
 """
 
+import json
 from pkg_resources import require
 from flask import render_template, request, jsonify, send_file, g
 import jwt
@@ -64,6 +65,8 @@ def requires_auth(f):
 ###
 # Routing for your application.
 ###
+
+
 @app.route('/')
 @requires_auth
 def index():
@@ -96,8 +99,8 @@ def login():
                 encoded_jwt = createToken(user)
                 return {"message": [], "token": encoded_jwt}
             else:
-                return {"message":['Incorrect credentials']}
-    else :
+                return {"message": ['Incorrect credentials']}
+    else:
         return {
             "message": form_errors(form)
         }
@@ -123,7 +126,7 @@ def register():
         if User.query.filter_by(username=username).first() == None and User.query.filter_by(email=email).first() == None:
 
             user = User(username=username, password=generate_password_hash(password, method='pbkdf2:sha256'), name=name,
-                        email=email, location=location, biography=bio, photo=file_path,date_joined=date.today())
+                        email=email, location=location, biography=bio, photo=file_path, date_joined=date.today())
             db.session.add(user)
             db.session.commit()
 
@@ -149,37 +152,39 @@ def returncars():
 
 
 @app.route('/api/cars', methods=['POST'])
+@requires_auth
 def addcars():
-    addcar = AddCarForm()
+
+    addCarForm = AddCarForm()
 
     if request.method == 'POST':
-        if addcar.validate_on_submit():
+        if addCarForm.validate_on_submit():
 
             # Collect the data from the form
-            make = request.addcar['make']
-            description = request.addcar['description']
-            model = request.addcar['model']
-            colour = request.addcar['colour']
-            year = request.addcar['year']
-            transmission = request.addcar['transmission']
-            cartype = request.addcar['cartype']
-            price = request.addcar['price']
-            file = request.files['photo']
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            make = addCarForm.make.data
+            description = addCarForm.description.data
+            model = addCarForm.model.data
+            colour = addCarForm.colour.data
+            year = addCarForm.year.data
+            transmission = addCarForm.transmissionType.data
+            carType = addCarForm.carType.data
+            price = addCarForm.price.data
+            carPhoto = addCarForm.carPhoto.data
 
-            mycar = Car(make, description, model, colour, year,
-                        transmission, cartype, price, filename)
+            filename  = os.path.join(
+                app.config['UPLOAD_FOLDER'], secure_filename(carPhoto.filename))
+
+            carPhoto.save(filename)
+
+            mycar = Car(g.current_user['id'],description,make,model,colour,year,transmission,carType,price,filename)
             db.session.add(mycar)
             db.session.commit()
 
-            flash('New car has been successfully added!', 'success')
-            return redirect(url_for(''))
+            return {"car":Car.query.filter_by(id=mycar.id).first()}
         else:
-            flash("Error!")
-            return render_template('', form=addcar)
-    elif request.method == 'GET':
-        return render_template('', form=addcar)
+            return {
+                'message': form_errors(addCarForm)
+            }
 
 
 @app.route('/api/cars/{car_id}', methods=['GET'])

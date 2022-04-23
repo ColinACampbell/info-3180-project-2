@@ -1,8 +1,9 @@
 # Add any form classes for Flask-WTF here
 import email
+from tokenize import String
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import StringField, TextAreaField, PasswordField, IntegerField, SelectField
+from wtforms import StringField, TextAreaField, PasswordField, IntegerField
 from wtforms.validators import DataRequired
 
 
@@ -26,16 +27,10 @@ class AddCarForm(FlaskForm):
     model = StringField('model', validators=[DataRequired()])
     colour = StringField('colour', validators=[DataRequired()])
     year = IntegerField('year', validators=[DataRequired()])
-    transmission = SelectField('Transmission Type', choices=[
-        ('Manual', 'Manual'), ('Automatic', 'Automatic')], validators=[DataRequired()])
+    transmissionType = StringField('transmissionType', validators=[DataRequired()])
     price = IntegerField('price', validators=[DataRequired()])
-    cartype = SelectField('Transmission Type', choices=[
-                         ('SUV', 'SUV'), ('Sedan', 'Sedan'), ('Hatchback',
-                                                              'Hatchback'), ('Pickup Truck', 'Pickup Truck'),
-                         ('Coupe', 'Coupe'), ('Convertible',
-                                              'Convertible'), ('Minivan', 'Minivan'),
-                         ('Crossover', 'Crossover'), ('Van', 'Van')], validators=[DataRequired()])
-    carphoto = FileField('carphoto', validators=[FileRequired(), FileAllowed(
+    carType = StringField('carType', validators=[DataRequired()])
+    carPhoto = FileField('carPhoto', validators=[FileRequired(), FileAllowed(
         ['jpg', 'png', 'jpeg', 'Please upload images only.'])])
 
     class Meta:

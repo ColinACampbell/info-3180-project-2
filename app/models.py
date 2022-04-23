@@ -1,8 +1,23 @@
+import string
 from app import db
 from werkzeug.security import generate_password_hash
 from datetime import date
+from dataclasses import dataclass
 
+
+@dataclass
 class Car(db.Model):
+    id: int
+    userId: int
+    description: string
+    make: string
+    model: string
+    color:  string
+    year: int
+    transmission:  string
+    car_type: string
+    price: int
+    photo: string
 
     __tablename__ = 'cars'
 
@@ -32,6 +47,7 @@ class Car(db.Model):
         self.photo = photo
 
 
+@dataclass
 class Favourite(db.Model):
 
     __tablename__ = 'favourites'
@@ -45,6 +61,7 @@ class Favourite(db.Model):
         self.carId = carId
 
 
+@dataclass
 class User(db.Model):
 
     __tablename__ = 'users'
@@ -59,9 +76,10 @@ class User(db.Model):
     photo = db.Column(db.String(100))
     date_joined = db.Column(db.DateTime)
 
-    def _init__(self, username, password, name, email, location, biography, photo,date_joined):
+    def _init__(self, username, password, name, email, location, biography, photo, date_joined):
         self.username = username
-        self.password = generate_password_hash(password, method='pbkdf2:sha256')
+        self.password = generate_password_hash(
+            password, method='pbkdf2:sha256')
         self.name = name
         self.email = email
         self.location = location
