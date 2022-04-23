@@ -3,7 +3,7 @@
  <form @submit.prevent="login" id="loginForm" method="POST" enctype="multipart/form-data">'
 
 	<label class="label" for="username">Username</label>
-    <input type="text" name="name" id="name" class="form-control" placeholder="Enter your Username"/>
+    <input type="text" name="username" id="username" class="form-control" placeholder="Enter your Username"/>
 	<label class="label" for="password">Password</label>
     <input type="text" name="password" id="password" class="form-control" placeholder="Enter your Password"/>
 	<button class="btn">Login</button>
@@ -21,21 +21,16 @@ export default {
             }
         },
         methods: {
-            methods: {
             login() {
 
                 const self = this;
                 let loginForm = document.getElementById('loginForm');
                 let form_data = new FormData(loginForm);
 
-                fetch("/api/login", {method: 'POST', body: form_data,
-                headers: {
-                    'X-CSRFToken': this.csrf_token
-                    }
+                fetch("${import.meta.env.VITE_API_URL}/api/auth/login", {method: 'POST', body: form_data
                 }).then(function (response) {
                     return response.json();
                 }).then(function (data) {
-                    // display a success message
                     console.log(data);
                 }).catch(function (error) {
                     console.log(error);

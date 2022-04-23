@@ -55,8 +55,8 @@
         methods: {
             searchCars() {
                 let self = this;
-                fetch('/api/cars'+ self.searchCars + '&language=en', {
-                    headers: authHeader(),
+                fetch('${import.meta.env.VITE_API_URL}/api/cars'+ self.searchCars + '&language=en', {
+                    headers: authHeader()
                 }
             }).then(function(response) {
                 return response.json();
@@ -68,16 +68,15 @@
         },
         created() {
             let self = this;
-            fetch(`/api/cars=us&apiKey=${import.meta.env.VITE_NEWSAPI_TOKEN}`,
+            fetch(`${import.meta.env.VITE_API_URL}/api/cars`,
             {
-            headers: {
-                'Authorization': `Bearer ${import.meta.env.VITE_NEWSAPI_TOKEN}`
+            headers: authHeader()
             }
         }).then(function(response) {
             return response.json();
         }).then(function(data) {
             console.log(data);
-            self.cars = data.cars;
+            self.cars = [JSON.parse(data.cars)[-1], JSON.parse(data.cars)[-2], JSON.parse(data.cars)[-3]];
         });
         }
     };
