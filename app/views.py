@@ -5,7 +5,9 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file creates your application.
 """
 
-from flask import render_template, request, jsonify, send_file
+from pkg_resources import require
+from flask import render_template, request, jsonify, send_file, g
+import jwt
 from app.models import User, Favourite, Car
 import os
 from app import app, db
@@ -15,12 +17,55 @@ from app.models import User
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from flask_wtf.csrf import generate_csrf
+from functools import wraps
+
+
+def createToken(user):
+    return jwt.encode({'id': user.id}, app.config['SECRET_KEY'],
+                      algorithm='HS256')
+
+
+# Create a JWT @requires_auth decorator
+# This decorator can be used to denote that a specific route should check
+# for a valid JWT token before displaying the contents of that route.
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        # or request.cookies.get('token', None)
+        auth = request.headers.get('Authorization', None)
+
+        if not auth:
+            return jsonify({'code': 'authorization_header_missing', 'description': 'Authorization header is expected'}), 401
+
+        parts = auth.split()
+
+        if parts[0].lower() != 'bearer':
+            return jsonify({'code': 'invalid_header', 'description': 'Authorization header must start with Bearer'}), 401
+        elif len(parts) == 1:
+            return jsonify({'code': 'invalid_header', 'description': 'Token not found'}), 401
+        elif len(parts) > 2:
+            return jsonify({'code': 'invalid_header', 'description': 'Authorization header must be Bearer + \s + token'}), 401
+
+        token = parts[1]
+        try:
+            payload = jwt.decode(
+                token, app.config['SECRET_KEY'], algorithms=["HS256"])
+
+        except jwt.ExpiredSignatureError:
+            return jsonify({'code': 'token_expired', 'description': 'token is expired'}), 401
+        except jwt.DecodeError:
+            return jsonify({'code': 'token_invalid_signature', 'description': 'Token signature is invalid'}), 401
+
+        g.current_user = user = payload
+        return f(*args, **kwargs)
+
+    return decorated
+
 ###
 # Routing for your application.
 ###
-
-
 @app.route('/')
+@requires_auth
 def index():
     return send_file(os.path.join('../dist/', 'index.html'))
 
@@ -81,15 +126,16 @@ def register():
             db.session.add(user)
             db.session.commit()
 
-            return {"message": ['Ok']} 
-        else : 
-            return {"message": ['User Exists']} 
+            encoded_jwt = createToken(user)
+
+            return {"message": [], "token": encoded_jwt}
+        else:
+            return {"message": ['User exists']}
     else:
         return {
             "message": form_errors(createUserForm)
         }
 
-    return {"message": []}
 
 @app.route('/api/csrf-token', methods=['GET'])
 def get_csrf():
