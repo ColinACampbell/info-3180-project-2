@@ -1,5 +1,8 @@
 <script>
 export default {
+    created() {
+      console.log(import.meta.env.VITE_API_URL)
+    },
     data() {
         return {
             message: "Hello World! This is Lab 7"

@@ -1,7 +1,24 @@
+import string
+from xmlrpc.client import DateTime
 from app import db
+from werkzeug.security import generate_password_hash
+from datetime import date
+from dataclasses import dataclass
 
 
+@dataclass
 class Car(db.Model):
+    id: int
+    userId: int
+    description: string
+    make: string
+    model: string
+    color:  string
+    year: int
+    transmission:  string
+    car_type: string
+    price: int
+    photo: string
 
     __tablename__ = 'cars'
 
@@ -31,7 +48,11 @@ class Car(db.Model):
         self.photo = photo
 
 
-class Favourites(db.Model):
+@dataclass
+class Favourite(db.Model):
+
+    id:int
+    carId:int
 
     __tablename__ = 'favourites'
 
@@ -44,13 +65,23 @@ class Favourites(db.Model):
         self.carId = carId
 
 
-class Users(db.Model):
+@dataclass
+class User(db.Model):
 
     __tablename__ = 'users'
 
+    id :int
+    username :string
+    name:string
+    email :string
+    location:string
+    biography :string
+    photo:string
+    date_joined : DateTime
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80))
-    password = db.Column(db.String(80))
+    password = db.Column(db.String(300))
     name = db.Column(db.String(80))
     email = db.Column(db.String(100))
     location = db.Column(db.String(500))
@@ -58,30 +89,13 @@ class Users(db.Model):
     photo = db.Column(db.String(100))
     date_joined = db.Column(db.DateTime)
 
-    def _init__(self, username, password, name, email, location, biography, photo):
+    def _init__(self, username, password, name, email, location, biography, photo, date_joined):
         self.username = username
-        self.password = password
+        self.password = generate_password_hash(
+            password, method='pbkdf2:sha256')
         self.name = name
         self.email = email
         self.location = location
         self.biography = biography
         self.photo = photo
-        # date_joined = db.Column(db.DateTime)  set the date joined when the constructor is called
-
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):
-        return True
-
-    def is_anonymous(self):
-        return False
-
-    def get_id(self):
-        try:
-            return unicode(self.id)  # python 2 support
-        except NameError:
-            return str(self.id)  # python 3 support
-
-    def __repr__(self):
-        return '<User %r>' % (self.username)
+        self.date_joined = date_joined
