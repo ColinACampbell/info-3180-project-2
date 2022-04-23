@@ -44,7 +44,7 @@ class Favourites(db.Model):
         self.carId = carId
 
 
-class Users(db.Model):
+class User(db.Model):
 
     __tablename__ = 'users'
 

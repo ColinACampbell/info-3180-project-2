@@ -5,13 +5,13 @@ Werkzeug Documentation:  https://werkzeug.palletsprojects.com/
 This file creates your application.
 """
 
-from app import app,db, login_manager
-from flask import render_template, request, jsonify,url_for, send_file, redirect,flash
+from app import app, db  # , login_manager
+from flask import render_template, request, jsonify, url_for, send_file, redirect, flash
 import os
-from app import app 
+from app import app
 from flask_login import login_user, logout_user, current_user, login_required
-from app.forms import LoginForm,CreateUserForm, PicForm,AddCarForm
-from app.models import UserProfile
+from app.forms import LoginForm, CreateUserForm, AddCarForm
+from app.models import User
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from flask_wtf.csrf import generate_csrf
@@ -19,6 +19,7 @@ from flask_wtf.csrf import generate_csrf
 ###
 # Routing for your application.
 ###
+
 
 @app.route('/')
 def index():
@@ -35,7 +36,8 @@ def logout():
     flash('You have been logged out.', 'danger')
     return redirect(url_for("index"))
 
-@app.route("/api/auth/login", methods=[ "POST"])
+
+@app.route("/api/auth/login", methods=["POST"])
 def login():
     form = LoginForm()
     if request.method == "POST" and form.validate_on_submit():
@@ -43,22 +45,32 @@ def login():
             username = form.username.data
             password = form.password.data
 
-            user = UserProfile.query.filter_by(username=username).first()
+            user = User.query.filter_by(username=username).first()
 
             if user is not None and check_password_hash(user.password, password):
                 login_user(user)
                 flash("Successful login! ", "success")
-                return redirect(url_for("")) 
+                return redirect(url_for(""))
             else:
                 flash("Login denied. Try again!", "danger")
 
             return redirect(url_for("index"))
     return render_template("login.html", form=form)
 
+
 @app.route('/api/register', methods=['POST'])
 def register():
-    createuser = CreateUserForm()
-   
+    createUserForm = CreateUserForm()
+    if (createUserForm.validate_on_submit()):
+        pass
+    else:
+        return {
+            "message": createUserForm.errors.items()
+        }
+
+    print("Method runs")
+    return {"message": []}
+    '''
     if request.method == 'POST':
         createuser.username.data = request.form['username']
         createuser.password.data = request.form['password']
@@ -80,7 +92,7 @@ def register():
             photo = createuser.profile_photo.data
 
             filename = secure_filename(photo.filename)
-            dbuser = UserProfile(username, password, firstname, lastname, emailaddress, location, bio, filename)
+            dbuser = User(username, password, firstname, lastname, emailaddress, location, bio, filename)
             db.session.add(dbuser)
             db.session.commit()
             profile_photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -94,17 +106,18 @@ def register():
             "errors": [{"filename":form_errors(createuser)}]
         }
         return jsonify(errordata=errordata)
+        '''
 
 
-            
-    
 @app.route('/api/cars', methods=['GET'])
 def returncars():
     return car
+
+
 @app.route('/api/cars', methods=['POST'])
 def addcars():
     addcar = AddCarForm()
-   
+
     if request.method == 'POST':
         if addcar.validate_on_submit():
 
@@ -121,7 +134,8 @@ def addcars():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
-            mycar = Car(make, description, model, colour, year, transmission, cartype,price, filename)
+            mycar = Car(make, description, model, colour, year,
+                        transmission, cartype, price, filename)
             db.session.add(mycar)
             db.session.commit()
 
@@ -131,20 +145,28 @@ def addcars():
             flash("Error!")
             return render_template('', form=addcar)
     elif request.method == 'GET':
-        return render_template('', form=addcar) 
+        return render_template('', form=addcar)
+
 
 @app.route('/api/cars/{car_id}', methods=['GET'])
 def cardetail():
     return car
+
+
 @app.route('/api/cars/{car_id}/favourites', methods=['POST'])
 def favcar():
     return car
+
+
 @app.route('/api/searh', methods=['GET'])
 def searchcars():
     return car
+
+
 @app.route('/api/users/{user_id}', methods=['GET'])
 def userdetails():
     return car
+
 
 @app.route('/api/users/{user_id}/favourites', methods=['GET'])
 def userfavs():
@@ -152,18 +174,21 @@ def userfavs():
 
 # Here we define a function to collect form errors from Flask-WTF
 # which we can later use
+
+
 def form_errors(form):
     error_messages = []
     """Collects form errors"""
     for field, errors in form.errors.items():
         for error in errors:
             message = u"Error in the %s field - %s" % (
-                    getattr(form, field).label.text,
-                    error
-                )
+                getattr(form, field).label.text,
+                error
+            )
             error_messages.append(message)
 
     return error_messages
+
 
 @app.route('/<file_name>.txt')
 def send_text_file(file_name):
@@ -191,4 +216,4 @@ def page_not_found(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True,host="0.0.0.0",port="8080")
+    app.run(debug=True, host="0.0.0.0", port="8080")

@@ -9,7 +9,7 @@ class CreateUserForm(FlaskForm):
     password = PasswordField('password', validators=[DataRequired()])
     firstname = StringField('firstname', validators=[DataRequired()])
     lastname = StringField('lastname', validators=[DataRequired()])
-    emailaddress = StringField('emailaddress', validators=[DataRequired()])
+    emailaddress = StringField('emailAddress', validators=[DataRequired()])
     location = StringField('location', validators=[DataRequired()])
     bio = TextAreaField('bio', validators=[DataRequired()])
     photo = FileField('photo', validators=[FileRequired(),FileAllowed(['jpg', 'png', 'jpeg', 'Images only!'])])
