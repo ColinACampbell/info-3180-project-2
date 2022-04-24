@@ -1,11 +1,16 @@
 <template>
  <form @submit.prevent="login" id="loginForm" method="POST" enctype="multipart/form-data">
 
-	<label class="label" for="username">Username</label>
-    <input type="text" name="username" id="username" class="form-control" placeholder="Enter your Username"/>
-	<label class="label" for="password">Password</label>
-    <input type="text" name="password" id="password" class="form-control" placeholder="Enter your Password"/>
-	<button class="btn">Login</button>
+	<div class="mb-3">
+    <label class="form-label" for="username">Username</label>
+        <input type="text" name="username" id="username" class="form-control" placeholder="Enter your Username"/>
+  </div>
+    <div class="mb-3">
+      <label class="form-label" for="password">Password</label>
+          <input type="text" name="password" id="password" class="form-control" placeholder="Enter your Password"/>
+    </div>
+    <button class="btn btn-warning text-white w-100">Login</button>
+  
 
 </form>
 

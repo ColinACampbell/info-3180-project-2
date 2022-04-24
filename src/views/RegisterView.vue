@@ -1,5 +1,5 @@
 <script>
-import LoginForm from "@/components/RegisterForm.vue";
+import RegisterForm from "@/components/RegisterForm.vue";
 
     export default {
         data() {
@@ -10,15 +10,11 @@ import LoginForm from "@/components/RegisterForm.vue";
 </script>
 
 <template>
-    <div class="form-container">
-        <h2>User Registration Form</h2>
+    <div class="container">
+        <h2 class="text-warning text-center">Register</h2>
         <RegisterForm />
     </div>
 </template>
 
 <style>
-h2 {
-    display: flex;
-    justify-content: center;
-}
 </style>

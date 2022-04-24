@@ -10,15 +10,11 @@ import LoginForm from "@/components/LoginForm.vue";
 </script>
 
 <template>
-    <div class="form-container">
-        <h2>User Login</h2>
+    <div class="container">
+        <h2 class="text-warning text-center fw-bold">Login</h2>
         <LoginForm />
     </div>
 </template>
 
 <style>
-h2 {
-    display: flex;
-    justify-content: center;
-}
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h2>Add a New Car</h2>
+        <h2 class="text-warning">Add a New Car</h2>
         <hr class="solid">
         <AddCar />
     </div>

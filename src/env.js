@@ -1,3 +1,3 @@
 export default {
-    BASE_API : "http://192.168.100.199:8080"
+    VITE_API_URL : "http://172.0.0.1:8080"
 }

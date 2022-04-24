@@ -1,6 +1,6 @@
 <template>
   <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
       <div class="container-fluid">
         <a class="navbar-brand fw-bold text-warning" href="/">United Auto Sales</a>
         <button
@@ -28,9 +28,13 @@
             <li class="nav-item px-3">
               <RouterLink class="nav-link" to="/cars/new">Add a Car</RouterLink>
             </li>
-            <li class="nav-item px-3">
+            <li class="nav-item px-3 d-flex justify-content-end">
+              <RouterLink class="nav-link" to="/register">Register</RouterLink>
+            </li>
+            <li class="nav-item px-3 d-flex justify-content-end">
               <RouterLink class="nav-link" to="/login">Login</RouterLink>
             </li>
+            
           </ul>
         </div>
       </div>
