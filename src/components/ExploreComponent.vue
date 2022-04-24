@@ -48,7 +48,7 @@
                 <p class="car-model">{{ car.model }}</p>
               </div>
             </div>
-            <button @click="getCar(car.id)" class="btn-details">
+            <button @click="cardetail(car.id)" class="btn-details">
               View More Details
             </button>
           </div>
@@ -59,7 +59,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
     export default {
         data() {
             return {
