@@ -50,7 +50,6 @@ export default {
             this.getCsrfToken();
         }
     }
-}
 </script>
 
 <style>
