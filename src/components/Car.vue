@@ -1,6 +1,10 @@
 <template>
   <div class="card shadow p-3 mb-5 bg-body rounded mx-auto" style="width: 55vw">
-    <img :src="car.photo" alt="car.make" class="card-img-top" />
+    <img
+      :src="API_ENDPOINT + '/' + car.photo"
+      alt="car.make"
+      class="card-img-top"
+    />
     <div class="card-body">
       <h3 class="card-title">{{ car.make }}</h3>
       <h4 class="card-title text-muted">{{ car.model }}</h4>
@@ -57,11 +61,11 @@ import headerUtils from "./../util/header.util";
 
 export default {
   mounted() {
-    const carID = parseInt(this.$route.params.id)
-    const self = this
+    const carID = parseInt(this.$route.params.id);
+    const self = this;
     fetch(`${import.meta.env.VITE_API_URL}/api/cars/${carID}`, {
       method: "GET",
-      headers: headerUtils.authHeader()
+      headers: headerUtils.authHeader(),
     })
       .then(function (response) {
         return response.json();
@@ -82,6 +86,9 @@ export default {
   computed: {
     carID() {
       return parseInt(this.$route.params.id);
+    },
+    API_ENDPOINT: function () {
+      return import.meta.env.VITE_API_URL;
     },
   },
   methods: {
