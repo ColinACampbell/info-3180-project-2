@@ -29,9 +29,7 @@
                     <div class="col"><button class="btn btn-warning text-light">Email Owner</button></div>
         
                     <div class="col d-flex justify-content-end"><button class="btn-round"><i :class="[favButtonActive ? 'fa-solid' : 'fa-regular']" @click="favButtonActive = !favButtonActive" class="fa fa-heart"></i></button></div>
-                </div>
-        
-        
+                </div>       
             </div>
         </div>
 </template>

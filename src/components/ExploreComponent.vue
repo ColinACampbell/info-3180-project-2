@@ -1,6 +1,5 @@
 <template>
   <section id="explore-page">
-
     <h1 class="text-warning m-5">Explore</h1>
 
     <div class="d-flex align-items-center search-cars row">
@@ -26,7 +25,11 @@
           class="search-input form-control"
         />
       </div>
-      <div class="col"><button class="btn btn-warning text-light px-5" @click="searchCars">Search</button></div>
+      <div class="col">
+        <button class="btn btn-warning text-light px-5" @click="searchCars">
+          Search
+        </button>
+      </div>
     </div>
 
     <div class="car-cards">
@@ -48,7 +51,7 @@
                 <p class="car-model">{{ car.model }}</p>
               </div>
             </div>
-            <button @click="cardetail(car.id)" class="btn-details">
+            <button @click="carDetail(car.id)" class="btn-details">
               View More Details
             </button>
           </div>
@@ -69,6 +72,9 @@ export default {
     };
   },
   methods: {
+    carDetail(id) {
+      this.$router.push({ name: 'car-details', params: { id } })
+    },
     searchCars() {
       let self = this;
       fetch(
@@ -103,10 +109,9 @@ export default {
           self.cars.push(data[i]);
           i--;
           carCount--;
-          if (i == 2)
-            break
+          if (i == 2) break;
         }
-        console.log(self.cars)
+        console.log(self.cars);
       });
   },
 };
