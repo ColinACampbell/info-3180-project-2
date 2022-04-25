@@ -31,7 +31,7 @@
 
     <div class="car-cards">
       <ul class="cars-lst">
-        <li v-for="car in currentCars" :key="car.id">
+        <li v-for="car in cars" :key="car.id">
           <div class="car-card">
             <div class="photo">
               <img :src="API_ENDPOINT + '/uploads/' + car.photo" alt="car" />
@@ -103,6 +103,8 @@ export default {
           self.cars.push(data[i]);
           i--;
           carCount--;
+          if (i == 2)
+            break
         }
         console.log(self.cars)
       });
