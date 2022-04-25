@@ -1,32 +1,32 @@
 <template>
   <section id="explore-page">
-    <div class="heading">
-      <h1>Explore</h1>
-    </div>
-    <div class="search-cars">
-      <div class="inputs">
-        <label class="model" for="make">Make</label>
+
+    <h1 class="text-warning m-5">Explore</h1>
+
+    <div class="d-flex align-items-center search-cars row">
+      <div class="inputs col d-flex align-items-center">
+        <label class="model me-2" for="make">Make</label>
         <input
           type="search"
           name="make"
           v-model="searchTermMake"
           v-on:change="empty"
           id="make"
-          class="search-input"
+          class="search-input form-control"
         />
       </div>
-      <div class="inputs">
-        <label class="model" for="model">Model</label>
+      <div class="inputs col d-flex align-items-center">
+        <label class="model me-2" for="model">Model</label>
         <input
           type="search"
           name="model"
           v-model="searchTermModel"
           v-on:change="empty"
           id="model"
-          class="search-input"
+          class="search-input form-control"
         />
       </div>
-      <button class="btn-search" @click="searchCars">Search</button>
+      <div class="col"><button class="btn btn-warning text-light px-5" @click="searchCars">Search</button></div>
     </div>
 
     <div class="car-cards">
