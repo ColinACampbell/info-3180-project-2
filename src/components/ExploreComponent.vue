@@ -32,27 +32,41 @@
       </div>
     </div>
 
-    <div class="car-cards card-group">
-      <ul class="cars-lst">
-        <li v-for="car in cars" :key="car.id">
-          <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="width:20rem">
-            <img :src="API_ENDPOINT + '/' + car.photo" alt="car" class="card-img-top"/>
-            <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <p class="year-and-make card-text fw-bolder">{{ car.year + " " + car.make }}</p>
-                    </div>
-                    <div class="col">
-                      <p class="btn btn-warning text-light"><i class="fa-solid fa-tag"></i> ${{ car.price }}</p>
-                    </div>
-                  </div>
-
-              <p class="car-model text-muted">{{ car.model }}</p>
+    <div class="card-group">
+      <div v-for="car in cars" :key="car.id">
+        <div
+          class="card shadow-sm p-3 mb-5 bg-body rounded"
+          style="width: 20rem; min-height:500px"
+        >
+          <img
+            :src="API_ENDPOINT + '/' + car.photo"
+            alt="car"
+            class="card-img-top"
+          />
+          <div class="card-body">
+            <div class="row">
+              <div class="col">
+                <p class="year-and-make card-text fw-bolder">
+                  {{ car.year + " " + car.make }}
+                </p>
+              </div>
+              <div class="col">
+                <p class="btn btn-warning text-light">
+                  <i class="fa-solid fa-tag"></i> ${{ car.price }}
+                </p>
+              </div>
             </div>
-            <button @click="carDetail(car.id)" class="btn btn-primary w-100 text-light">View More Details</button>
+
+            <p class="car-model text-muted">{{ car.model }}</p>
           </div>
-        </li>
-      </ul>
+          <button
+            @click="carDetail(car.id)"
+            class="btn btn-primary w-100 text-light"
+          >
+            View More Details
+          </button>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -77,7 +91,7 @@ export default {
           self.cars.push(data[i]);
           i--;
           carCount--;
-          count ++
+          count++;
           if (count == 3) break;
         }
         console.log(self.cars);
@@ -91,7 +105,7 @@ export default {
   },
   computed: {
     API_ENDPOINT: function () {
-      return import.meta.env.VITE_API_URL
+      return import.meta.env.VITE_API_URL;
     },
   },
   methods: {
@@ -121,5 +135,7 @@ export default {
 </script>
 
 <style>
-/* Add any component specific styles here */
+.card-group{
+  margin-top:30px
+}
 </style>
