@@ -34,9 +34,9 @@
 
     <div class="car-cards card-group">
       <ul class="cars-lst">
-        <li v-for="car in currentCars" :key="car.id">
+        <li v-for="car in cars" :key="car.id">
           <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="width:20rem">
-            <img :src="API_ENDPOINT + '/uploads/' + car.photo" alt="car" class="card-img-top"/>
+            <img :src="API_ENDPOINT + '/' + car.photo" alt="car" class="card-img-top"/>
             <div class="card-body">
                   <div class="row">
                     <div class="col">
@@ -47,7 +47,7 @@
                     </div>
                   </div>
 
-                <p class="car-model text-muted">{{ car.model }}</p>
+              <p class="car-model text-muted">{{ car.model }}</p>
             </div>
             <button @click="carDetail(car.id)" class="btn btn-primary w-100 text-light">View More Details</button>
           </div>
@@ -72,11 +72,13 @@ export default {
       .then(function (data) {
         let carCount = data.length;
         let i = carCount - 1;
+        let count = 0;
         while (carCount > 0) {
           self.cars.push(data[i]);
           i--;
           carCount--;
-          if (i == 2) break;
+          count ++
+          if (count == 3) break;
         }
         console.log(self.cars);
       });
@@ -86,6 +88,11 @@ export default {
       cars: [],
       searchCars: "",
     };
+  },
+  computed: {
+    API_ENDPOINT: function () {
+      return import.meta.env.VITE_API_URL
+    },
   },
   methods: {
     carDetail(id) {
