@@ -90,8 +90,8 @@ export default {
         getUser() {
             let self = this;
             fetch(`${import.meta.env.VITE_API_URL}/api/users/${userID()}`,{method: 'GET',
-                headers: authHeader(), {'Content-Type': 'application/json'}
-                }).then(function (response) {
+                headers: authHeader(), 'Content-Type': 'application/json'}
+                ).then(function (response) {
                     return response.json();
                 }).then(function (data) {
                     console.log(data);
@@ -102,8 +102,8 @@ export default {
         },
         getCar() {
              fetch(`${import.meta.env.VITE_API_URL}/api/cars/${carID()}`, {method: 'GET',
-                headers: authHeader(), {'Content-Type': 'application/json'}
-                }).then(function (response) {
+                headers: authHeader(), 'Content-Type': 'application/json'}
+                ).then(function (response) {
                     return response.json();
                 }).then(function (data) {
                     console.log(data);
@@ -111,29 +111,30 @@ export default {
                 }).catch(function (error) {
                     console.log(error);
                 });
-        }
+        },
         created() {
             let self = this;
             fetch(`${import.meta.env.VITE_API_URL}/api/users/${userID()}/favourites`,
             {
             headers: authHeader()
             }
-        }).then(function(response) {
+        ).then(function(response) {
             return response.json();
         }).then(function(data) {
             console.log(data);
             self.currentCars = data.currentCars;
         });
-    }
-function authHeader() {
-  let accessToken = localStorage.getItem("jwt");
+        },
+        authHeader() {
+            let accessToken = localStorage.getItem("jwt");
 
-  if (accessToken) {
-    return { Authorization: "Bearer " + accessToken };
-  } else {
-    return {};
-  }
-}
+            if (accessToken) {
+                return { Authorization: "Bearer " + accessToken };
+            } else {
+                return {};
+            }
+        }
+    }
 }
 </script>
 

@@ -72,7 +72,7 @@
                 fetch('${import.meta.env.VITE_API_URL}/api/cars'+ self.searchCars + '&language=en', {
                     headers: authHeader()
                 }
-            }).then(function(response) {
+            ).then(function(response) {
                 return response.json();
             }).then(function(data) {
                 console.log(data);
@@ -86,12 +86,21 @@
             {
             headers: authHeader()
             }
-        }).then(function(response) {
+        ).then(function(response) {
             return response.json();
         }).then(function(data) {
             console.log(data);
             self.cars = [JSON.parse(data.cars)[-1], JSON.parse(data.cars)[-2], JSON.parse(data.cars)[-3]];
         });
+        },
+        authHeader() {
+            let accessToken = localStorage.getItem("jwt");
+
+            if (accessToken) {
+                return { Authorization: "Bearer " + accessToken };
+            } else {
+                return {};
+            }
         }
     };
 
