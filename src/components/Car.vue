@@ -12,7 +12,7 @@
       <div class="row">
         <div class="col-md-6">
           <p class="card-text">
-            Colour &nbsp; &nbsp; <strong>{{ colour }}</strong>
+            Colour &nbsp; &nbsp; <strong>{{ car.color }}</strong>
           </p>
         </div>
 
