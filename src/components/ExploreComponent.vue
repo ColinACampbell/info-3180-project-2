@@ -34,22 +34,35 @@
 
     <div class="car-cards card-group">
       <ul class="cars-lst">
-        <li v-for="car in currentCars" :key="car.id">
-          <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="width:25rem">
-            <img :src="API_ENDPOINT + '/uploads/' + car.photo" alt="car" class="card-img-top"/>
+        <li v-for="car in cars" :key="car.id">
+          <div
+            class="card shadow-sm p-3 mb-5 bg-body rounded"
+            style="width: 25rem"
+          >
+            <img
+              :src="API_URL + car.photo"
+              alt="car"
+              class="card-img-top"
+            />
             <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <p class="year-and-make card-text fw-bolder">{{ car.year + " " + car.make }}</p>
-                    </div>
-                    <div class="col">
-                      <p class="btn btn-warning"><i class="fa-solid fa-tag"></i> ${{ car.price }}</p>
-                    </div>
-                  </div>
+              <div class="row">
+                <div class="col">
+                  <p class="year-and-make card-text fw-bolder">
+                    {{ car.year + " " + car.make }}
+                  </p>
+                </div>
+                <div class="col">
+                  <p class="btn btn-warning">
+                    <i class="fa-solid fa-tag"></i> ${{ car.price }}
+                  </p>
+                </div>
+              </div>
 
-                <p class="car-model text-muted">{{ car.model }}</p>
+              <p class="car-model text-muted">{{ car.model }}</p>
             </div>
-            <button @click="carDetail(car.id)" class="btn btn-primary w-100">View More Details</button>
+            <button @click="carDetail(car.id)" class="btn btn-primary w-100">
+              View More Details
+            </button>
           </div>
         </li>
       </ul>
@@ -86,6 +99,11 @@ export default {
       cars: [],
       searchCars: "",
     };
+  },
+  computed: {
+    API_URL: function () {
+      return import.meta.env.VITE_API_URL
+    },
   },
   methods: {
     carDetail(id) {
