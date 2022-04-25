@@ -57,15 +57,20 @@
     />
     <label class="label" for="userPhoto">Upload Photo</label>
     <input type="file" name="photo" id="userPhoto" class="form-control" />
-    <button class="btn btn-primary" type="submit">Login</button>
+    <button class="btn btn-primary" type="submit">Register</button>
+    <Errors :errors="errors" />
   </form>
 </template>
 
 <script>
+import Errors from "@/components/Errors.vue";
+
 export default {
+  components: { Errors },
   data() {
     return {
       csrf_token: "",
+      errors: [],
     };
   },
   methods: {
@@ -73,15 +78,19 @@ export default {
       let registerForm = document.getElementById("registerForm");
       let form_data = new FormData(registerForm);
 
+      const self = this;
+
       fetch(`${import.meta.env.VITE_API_URL}/api/register`, {
         method: "POST",
         body: form_data,
       }).then(async (response) => {
+        const data = await response.json();
         if (response.status == 201) {
-          const data = await response.json();
           const jwt = data.token;
           localStorage.setItem("jwt", jwt);
           this.$router.push("/explore");
+        } else {
+          self.errors = data.message;
         }
       });
     },

@@ -1,60 +1,74 @@
 <template>
- <form @submit.prevent="login" id="loginForm" method="POST" enctype="multipart/form-data">
-
-	<div class="mb-3">
-    <label class="form-label" for="username">Username</label>
-        <input type="text" name="username" id="username" class="form-control" placeholder="Enter your Username"/>
-  </div>
+  <form
+    @submit.prevent="login"
+    id="loginForm"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    <div class="mb-3">
+      <label class="form-label" for="username">Username</label>
+      <input
+        type="text"
+        name="username"
+        id="username"
+        class="form-control"
+        placeholder="Enter your Username"
+      />
+    </div>
     <div class="mb-3">
       <label class="form-label" for="password">Password</label>
-          <input type="text" name="password" id="password" class="form-control" placeholder="Enter your Password"/>
+      <input
+        type="text"
+        name="password"
+        id="password"
+        class="form-control"
+        placeholder="Enter your Password"
+      />
     </div>
-    <button @click="login()" class="btn btn-warning text-white w-100">Login</button>
-  
-
-</form>
-
+    <button class="btn btn-warning text-white w-100">Login</button>
+    <Errors :errors="errors" />
+  </form>
 </template>
 
 <script>
+import Errors from "@/components/Errors.vue";
 export default {
-        data() {
-            return {
-                csrf_token: "",
-            }
-        },
-        methods: {
-            login() {
+  components: { Errors },
+  data() {
+    return {
+      csrf_token: "",
+      errors: [],
+    };
+  },
+  methods: {
+    login() {
+      const self = this;
+      let loginForm = document.getElementById("loginForm");
+      let form_data = new FormData(loginForm);
 
-                const self = this;
-                let loginForm = document.getElementById('loginForm');
-                let form_data = new FormData(loginForm);
+      fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+        method: "POST",
+        body: form_data,
+      })
+        .then(async (response) => {
+          const data = await response.json();
 
-                fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-                    method: "POST",
-                    body: form_data,
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (data) {
-                    console.log(data);
-                }).catch(function (error) {
-                    console.log(error);
-                });
-            },
-            getCsrfToken() {
-                let self = this;
-                fetch('/api/csrf-token')
-                .then((response) => response.json())
-                .then((data) => {
-                console.log(data);
-                self.csrf_token = data.csrf_token;
-            })
-            }
-        },
-        created() {
-            this.getCsrfToken();
-        }
-    }
+          if (response.status == 200) {
+            const jwt = data.token;
+            localStorage.setItem("jwt", jwt);
+            this.$router.push("/explore");
+          } else {
+            self.errors = data.message;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
+  created() {
+  },
+};
 </script>
 
 <style>
