@@ -9,7 +9,7 @@
       <label class="form-label" for="password">Password</label>
           <input type="text" name="password" id="password" class="form-control" placeholder="Enter your Password"/>
     </div>
-    <button class="btn btn-warning text-white w-100">Login</button>
+    <button @click="login()" class="btn btn-warning text-white w-100">Login</button>
   
 
 </form>

@@ -103,16 +103,6 @@
             }
         }
     };
-
-function authHeader() {
-  let accessToken = localStorage.getItem("jwt");
-
-  if (accessToken) {
-    return { Authorization: "Bearer " + accessToken };
-  } else {
-    return {};
-  }
-}
 </script>
 
 <style>

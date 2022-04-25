@@ -18,7 +18,7 @@
     <input type="text" name="biography" v-model="biography" id="biography" class="form-control" placeholder="Add a Biography"/>
     <label class="label" for="userPhoto">Upload Photo</label>
     <input type="file" name="userPhoto" id="userPhoto" class="form-control"/>
-	<button class="btn">Login</button>
+	<button @click="register()" class="btn btn-warning text-white w-100">Register</button>
 
 </form>
 
@@ -33,7 +33,6 @@ export default {
             }
         },
         methods: {
-            methods: {
             register() {
 
                 const self = this;
@@ -56,7 +55,7 @@ export default {
                 .then((data) => {
                 console.log(data);
                 self.csrf_token = data.csrf_token;
-            })
+                })
             }
         },
         created() {
