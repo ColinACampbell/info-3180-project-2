@@ -61,6 +61,7 @@ export default {
                 }).catch(function (error) {
                     console.log(error);
                 });
+<<<<<<< HEAD
                 },
         addToFavourites() {
             if (favButtonActive){
@@ -75,6 +76,9 @@ export default {
                 });
             }
         },
+=======
+         }
+>>>>>>> c9dac20555bb3ef875be2df774431fd796b694e5
     },
    
 }

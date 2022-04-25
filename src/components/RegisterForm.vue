@@ -1,6 +1,6 @@
 <template>
 
- <form @submit.prevent="register" id="registerForm" method="POST" enctype="multipart/form-data">'
+ <form @submit.prevent="register" id="registerForm" method="POST" enctype="multipart/form-data">
 
 	<label class="label" for="username">Username</label>
     <input type="text" name="username" id="username" class="form-control" placeholder="Enter your Username"/>
