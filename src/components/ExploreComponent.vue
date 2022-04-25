@@ -1,6 +1,5 @@
 <template>
   <section id="explore-page">
-
     <h1 class="text-warning m-5">Explore</h1>
 
     <div class="d-flex align-items-center search-cars row">
@@ -26,31 +25,31 @@
           class="search-input form-control"
         />
       </div>
-      <div class="col"><button class="btn btn-warning text-light px-5" @click="searchCars">Search</button></div>
+      <div class="col">
+        <button class="btn btn-warning text-light px-5" @click="searchCars">
+          Search
+        </button>
+      </div>
     </div>
 
-    <div class="car-cards">
+    <div class="car-cards card-group">
       <ul class="cars-lst">
         <li v-for="car in currentCars" :key="car.id">
-          <div class="car-card">
-            <div class="photo">
-              <img :src="API_ENDPOINT + '/uploads/' + car.photo" alt="car" />
+          <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="width:25rem">
+            <img :src="API_ENDPOINT + '/uploads/' + car.photo" alt="car" class="card-img-top"/>
+            <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <p class="year-and-make card-text fw-bolder">{{ car.year + " " + car.make }}</p>
+                    </div>
+                    <div class="col">
+                      <p class="btn btn-warning"><i class="fa-solid fa-tag"></i> ${{ car.price }}</p>
+                    </div>
+                  </div>
+
+                <p class="car-model text-muted">{{ car.model }}</p>
             </div>
-            <div class="car-info">
-              <div>
-                <span class="name-and-price">
-                  <p class="year-and-make">{{ car.year + " " + car.make }}</p>
-                  <span class="car-price">
-                    <img class="tags" src="../assets/tag.svg" alt="tag" />
-                    <p>${{ car.price }}</p>
-                  </span>
-                </span>
-                <p class="car-model">{{ car.model }}</p>
-              </div>
-            </div>
-            <button @click="cardetail(car.id)" class="btn-details">
-              View More Details
-            </button>
+            <button @click="carDetail(car.id)" class="btn btn-primary w-100">View More Details</button>
           </div>
         </li>
       </ul>
@@ -59,50 +58,59 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                cars: [],
-                searchCars: ""
-            };
-        },
-        methods: {
-            searchCars() {
-                let self = this;
-                fetch('${import.meta.env.VITE_API_URL}/api/cars'+ self.searchCars + '&language=en', {
-                    headers: authHeader()
-                }
-            ).then(function(response) {
-                return response.json();
-            }).then(function(data) {
-                console.log(data);
-                self.cars = data.cars;
-            });
-            }
-        },
-        created() {
-            let self = this;
-            fetch(`${import.meta.env.VITE_API_URL}/api/cars`,
-            {
-            headers: authHeader()
-            }
-        ).then(function(response) {
-            return response.json();
-        }).then(function(data) {
-            console.log(data);
-            self.cars = [JSON.parse(data.cars)[-1], JSON.parse(data.cars)[-2], JSON.parse(data.cars)[-3]];
-        });
-        },
-        authHeader() {
-            let accessToken = localStorage.getItem("jwt");
+import headerUtils from "./../util/header.util";
 
-            if (accessToken) {
-                return { Authorization: "Bearer " + accessToken };
-            } else {
-                return {};
-            }
+export default {
+  created() {
+    let self = this;
+    fetch(`${import.meta.env.VITE_API_URL}/api/cars`, {
+      headers: headerUtils.authHeader(),
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        let carCount = data.length;
+        let i = carCount - 1;
+        while (carCount > 0) {
+          self.cars.push(data[i]);
+          i--;
+          carCount--;
+          if (i == 2) break;
         }
+        console.log(self.cars);
+      });
+  },
+  data() {
+    return {
+      cars: [],
+      searchCars: "",
     };
+  },
+  methods: {
+    carDetail(id) {
+      this.$router.push({ name: "car-details", params: { id } });
+    },
+    searchCars() {
+      let self = this;
+      fetch(
+        `${import.meta.env.VITE_API_URL}/api/cars` +
+          self.searchCars +
+          "&language=en",
+        {
+          headers: authHeader(),
+        }
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          console.log(data);
+          self.cars = data.cars;
+        });
+    },
+  },
+};
 </script>
 
 <style>
