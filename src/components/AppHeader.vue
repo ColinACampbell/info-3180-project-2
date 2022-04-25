@@ -16,24 +16,28 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto">
-            <li class="nav-item ps-5 pe-3">
-              <RouterLink to="/" class="nav-link active">Home</RouterLink>
-            </li>
-           <!--<li class="nav-item px-3">
-              <RouterLink class="nav-link" to="/about">About</RouterLink>
-            </li>--> 
-            <li class="nav-item px-3">
-              <RouterLink class="nav-link" to="/explore">Explore</RouterLink>
-            </li>
-            <li class="nav-item px-3">
-              <RouterLink class="nav-link" to="/cars/new">Add a Car</RouterLink>
-            </li>
-            <li class="nav-item px-3 d-flex justify-content-end">
-              <RouterLink class="nav-link" to="/register">Register</RouterLink>
-            </li>
-            <li class="nav-item px-3 d-flex justify-content-end">
-              <RouterLink class="nav-link" to="/login">Login</RouterLink>
-            </li>
+            <div :class="[isLoggedIn ? '' : 'd-none']" class="d-flex flex-row">
+              <li class="nav-item ps-5 pe-3">
+                <RouterLink to="/" class="nav-link active">Home</RouterLink>
+              </li>
+              <li class="nav-item px-3">
+                <RouterLink class="nav-link" to="/explore">Explore</RouterLink>
+              </li>
+              <li class="nav-item px-3">
+                <RouterLink class="nav-link" to="/cars/new">Add a Car</RouterLink>
+              </li>
+            </div>
+            <div :class="[isLoggedIn ? 'd-none' : '']" class="d-flex flex-row">
+              <li class="nav-item px-3 d-flex justify-content-end">
+                <RouterLink class="nav-link" to="/register">Register</RouterLink>
+              </li>
+              <li class="nav-item px-3 d-flex justify-content-end">
+                <RouterLink class="nav-link" to="/login">Login</RouterLink>
+              </li>
+            </div>
+            <li :class="[isLoggedIn ? '' : 'd-none']" class="nav-item px-3 d-flex justify-content-end">
+                <RouterLink class="nav-link" to="/logout">Logout</RouterLink>
+              </li>
             
           </ul>
         </div>
@@ -44,6 +48,36 @@
 
 <script>
 import { RouterLink } from "vue-router";
+export default {
+  data() {
+    return {
+      isLoggedIn: false,
+    }
+  },
+  methods:
+  {
+    authHeader() {
+      let accessToken = localStorage.getItem("jwt");
+
+      if (accessToken) {
+        return { Authorization: "Bearer " + accessToken };
+      } else {
+        return {};
+      }
+  },
+    created() {
+      try {
+        let token = authHeader().Authorization;
+  
+        if(token) {
+          this.isLoggedIn = true;
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+  }
+}
 </script>
 
 <style>

@@ -5,7 +5,7 @@
 	<label class="label" for="username">Username</label>
     <input type="text" name="username" id="username" class="form-control" placeholder="Enter your Username"/>
 	<label class="label" for="password">Password</label>
-    <input type="text" name="password" id="password" class="form-control" placeholder="Enter your Password"/>
+    <input type="password" name="password" id="password" class="form-control" placeholder="Enter your Password"/>
     <label class="label" for="firstname">First Name</label>
     <input type="text" name="firstname" id="firstname" class="form-control" placeholder="Enter your First Name"/>
 	<label class="label" for="lastname">Last Name</label>
@@ -39,7 +39,7 @@ export default {
                 let registerForm = document.getElementById('registerForm');
                 let form_data = new FormData(registerForm);
 
-                fetch("${import.meta.env.VITE_API_URL}/api/register", {method: 'POST', body: form_data
+                fetch(`${import.meta.env.VITE_API_URL}/api/register`, {method: 'POST', body: form_data
                 }).then(function (response) {
                     return response.json();
                 }).then(function (data) {
