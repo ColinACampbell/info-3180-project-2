@@ -42,7 +42,7 @@
           <button class="btn-round">
             <i
               :class="[favButtonActive ? 'fa-solid' : 'fa-regular']"
-              @click="favButtonActive = !favButtonActive"
+              @click="favCar() isFav()"
               class="fa fa-heart"
             ></i>
           </button>
@@ -77,6 +77,8 @@ export default {
     return {
       favButtonActive: false,
       car: [],
+      currentCars: [],
+      count: 0
     };
   },
   computed: {
@@ -86,7 +88,45 @@ export default {
   },
   methods: {
     getCar() {},
+    isFav() {
+        let self = this;
+            fetch(`${import.meta.env.VITE_API_URL}/api/users/${userID()}/favourites`,
+            {
+            headers: authHeader()
+            }
+        ).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            console.log(data);
+            self.currentCars = data.currentCars;
+            for (car in currentCars) {
+            if (car.id == carID) {
+                count = 1
+            }
+            if (count > 0) {
+                favButtonActive: true
+            } else {
+                favButtonActive: false
+            }
+        });
+
+    }
   },
+  favCar() {
+    let self = this;
+            fetch(`${import.meta.env.VITE_API_URL}/api/cars/${carID}/favourites`, methods=['POST'],
+            {
+            headers: authHeader()
+            }
+        ).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            console.log(data);
+        });
+
+    }
+  }
+
 };
 </script>
 
