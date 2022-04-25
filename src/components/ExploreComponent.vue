@@ -65,35 +65,6 @@
 import headerUtils from "./../util/header.util";
 
 export default {
-  data() {
-    return {
-      cars: [],
-      searchCars: "",
-    };
-  },
-  methods: {
-    carDetail(id) {
-      this.$router.push({ name: 'car-details', params: { id } })
-    },
-    searchCars() {
-      let self = this;
-      fetch(
-        `${import.meta.env.VITE_API_URL}/api/cars` +
-          self.searchCars +
-          "&language=en",
-        {
-          headers: authHeader(),
-        }
-      )
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (data) {
-          console.log(data);
-          self.cars = data.cars;
-        });
-    },
-  },
   created() {
     let self = this;
     fetch(`${import.meta.env.VITE_API_URL}/api/cars`, {
@@ -113,6 +84,35 @@ export default {
         }
         console.log(self.cars);
       });
+  },
+  data() {
+    return {
+      cars: [],
+      searchCars: "",
+    };
+  },
+  methods: {
+    carDetail(id) {
+      this.$router.push({ name: "car-details", params: { id } });
+    },
+    searchCars() {
+      let self = this;
+      fetch(
+        `${import.meta.env.VITE_API_URL}/api/cars` +
+          self.searchCars +
+          "&language=en",
+        {
+          headers: authHeader(),
+        }
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          console.log(data);
+          self.cars = data.cars;
+        });
+    },
   },
 };
 </script>
