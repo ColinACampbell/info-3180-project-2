@@ -26,14 +26,18 @@
       />
     </div>
     <button class="btn btn-warning text-white w-100">Login</button>
+    <Errors :errors="errors" />
   </form>
 </template>
 
 <script>
+import Errors from "@/components/Errors.vue";
 export default {
+  components: { Errors },
   data() {
     return {
       csrf_token: "",
+      errors: [],
     };
   },
   methods: {
@@ -45,29 +49,24 @@ export default {
       fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         method: "POST",
         body: form_data,
-      }).then(async (response) => {
-        if (response.status == 200) {
-          const data = await response.json()
-          const jwt = data.token
-          localStorage.setItem('jwt',jwt)
-          this.$router.push("/explore");
-        }
-      });
-    },
-    getCsrfToken() {
-      let self = this;
-      fetch("/api/csrf-token")
+      })
         .then(async (response) => {
-          response.json();
+          const data = await response.json();
+
+          if (response.status == 200) {
+            const jwt = data.token;
+            localStorage.setItem("jwt", jwt);
+            this.$router.push("/explore");
+          } else {
+            self.errors = data.message;
+          }
         })
-        .then((data) => {
-          console.log(data);
-          self.csrf_token = data.csrf_token;
+        .catch((err) => {
+          console.log(err);
         });
     },
   },
   created() {
-    this.getCsrfToken();
   },
 };
 </script>
