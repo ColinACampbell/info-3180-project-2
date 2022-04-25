@@ -61,24 +61,7 @@ export default {
                 }).catch(function (error) {
                     console.log(error);
                 });
-<<<<<<< HEAD
-                },
-        addToFavourites() {
-            if (favButtonActive){
-                fetch(`${import.meta.env.VITE_API_URL}/api/cars/${carID()}/favourites`, {method: 'POST', 
-                headers: {'Content-Type': 'application/json'}
-                }).then(function (response) {
-                    return response.json();
-                }).then(function (data) {
-                    console.log(data);
-                }).catch(function (error) {
-                    console.log(error);
-                });
-            }
-        },
-=======
          }
->>>>>>> c9dac20555bb3ef875be2df774431fd796b694e5
     },
    
 }
