@@ -7,7 +7,7 @@ This file creates your application.
 
 import json
 from pkg_resources import require
-from flask import render_template, request, jsonify, send_file, g
+from flask import render_template, request, jsonify, send_file, g, send_from_directory
 import jwt
 from app.models import User, Favourite, Car
 import os
@@ -194,6 +194,11 @@ def addcars():
                 'message': form_errors(addCarForm)
             }, 400
 
+@app.route('/uploads/<filename>')
+def uploadimg(filename):
+    upimg = send_from_directory(os.path.join(os.getcwd(),
+    app.config['UPLOAD_FOLDER']), filename)
+    return upimg
 
 @app.route('/api/cars/<car_id>/favourites', methods=['POST'])
 @requires_auth
