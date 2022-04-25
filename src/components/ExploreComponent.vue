@@ -1,6 +1,5 @@
 <template>
   <section id="explore-page">
-
     <h1 class="text-warning m-5">Explore</h1>
 
     <div class="d-flex align-items-center search-cars row">
@@ -26,7 +25,11 @@
           class="search-input form-control"
         />
       </div>
-      <div class="col"><button class="btn btn-warning text-light px-5" @click="searchCars">Search</button></div>
+      <div class="col">
+        <button class="btn btn-warning text-light px-5" @click="searchCars">
+          Search
+        </button>
+      </div>
     </div>
 
     <div class="car-cards card-group">
@@ -46,7 +49,7 @@
 
                 <p class="car-model text-muted">{{ car.model }}</p>
             </div>
-            <button @click="cardetail(car.id)" class="btn btn-primary w-100">View More Details</button>
+            <button @click="carDetail(car.id)" class="btn btn-primary w-100">View More Details</button>
           </div>
         </li>
       </ul>
@@ -55,60 +58,59 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                cars: [],
-                searchCars: ""
-            };
-        },
-        methods: {
-            searchCars() {
-                let self = this;
-                fetch('${import.meta.env.VITE_API_URL}/api/cars'+ self.searchCars + '&language=en', {
-                    headers: authHeader()
-                }
-            ).then(function(response) {
-                return response.json();
-            }).then(function(data) {
-                console.log(data);
-                self.cars = data.cars;
-            });
-            }
-        },
-        created() {
-            let self = this;
-            fetch(`${import.meta.env.VITE_API_URL}/api/cars`,
-            {
-            headers: authHeader()
-            }
-        ).then(function(response) {
-            return response.json();
-        }).then(function(data) {
-            console.log(data);
-            self.cars = [JSON.parse(data.cars)[-1], JSON.parse(data.cars)[-2], JSON.parse(data.cars)[-3]];
-        });
-        },
-        authHeader() {
-            let accessToken = localStorage.getItem("jwt");
+import headerUtils from "./../util/header.util";
 
-            if (accessToken) {
-                return { Authorization: "Bearer " + accessToken };
-            } else {
-                return {};
-            }
+export default {
+  created() {
+    let self = this;
+    fetch(`${import.meta.env.VITE_API_URL}/api/cars`, {
+      headers: headerUtils.authHeader(),
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        let carCount = data.length;
+        let i = carCount - 1;
+        while (carCount > 0) {
+          self.cars.push(data[i]);
+          i--;
+          carCount--;
+          if (i == 2) break;
         }
+        console.log(self.cars);
+      });
+  },
+  data() {
+    return {
+      cars: [],
+      searchCars: "",
     };
-
-function authHeader() {
-  let accessToken = localStorage.getItem("jwt");
-
-  if (accessToken) {
-    return { Authorization: "Bearer " + accessToken };
-  } else {
-    return {};
-  }
-}
+  },
+  methods: {
+    carDetail(id) {
+      this.$router.push({ name: "car-details", params: { id } });
+    },
+    searchCars() {
+      let self = this;
+      fetch(
+        `${import.meta.env.VITE_API_URL}/api/cars` +
+          self.searchCars +
+          "&language=en",
+        {
+          headers: authHeader(),
+        }
+      )
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          console.log(data);
+          self.cars = data.cars;
+        });
+    },
+  },
+};
 </script>
 
 <style>

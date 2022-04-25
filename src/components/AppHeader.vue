@@ -2,7 +2,9 @@
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
       <div class="container-fluid">
-        <a class="navbar-brand fw-bold text-warning" href="/">United Auto Sales</a>
+        <a class="navbar-brand fw-bold text-warning" href="/"
+          >United Auto Sales</a
+        >
         <button
           class="navbar-toggler"
           type="button"
@@ -24,21 +26,27 @@
                 <RouterLink class="nav-link" to="/explore">Explore</RouterLink>
               </li>
               <li class="nav-item px-3">
-                <RouterLink class="nav-link" to="/cars/new">Add a Car</RouterLink>
+                <RouterLink class="nav-link" to="/cars/new"
+                  >Add a Car</RouterLink
+                >
               </li>
             </div>
             <div :class="[isLoggedIn ? 'd-none' : '']" class="d-flex flex-row">
               <li class="nav-item px-3 d-flex justify-content-end">
-                <RouterLink class="nav-link" to="/register">Register</RouterLink>
+                <RouterLink class="nav-link" to="/register"
+                  >Register</RouterLink
+                >
               </li>
               <li class="nav-item px-3 d-flex justify-content-end">
                 <RouterLink class="nav-link" to="/login">Login</RouterLink>
               </li>
             </div>
-            <li :class="[isLoggedIn ? '' : 'd-none']" class="nav-item px-3 d-flex justify-content-end">
-                <RouterLink class="nav-link" to="/logout">Logout</RouterLink>
-              </li>
-            
+            <li
+              :class="[isLoggedIn ? '' : 'd-none']"
+              class="nav-item px-3 d-flex justify-content-end"
+            >
+              <RouterLink class="nav-link" to="/logout">Logout</RouterLink>
+            </li>
           </ul>
         </div>
       </div>
@@ -48,36 +56,29 @@
 
 <script>
 import { RouterLink } from "vue-router";
+import headerUtils from "./../util/header.util";
+
 export default {
+  created() {
+    try {
+      let token = headerUtils.authHeader().Authorization;
+      console.log("Runs");
+      if (token) {
+        this.isLoggedIn = true;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
   data() {
     return {
       isLoggedIn: false,
-    }
+    };
   },
-  methods:
-  {
-    authHeader() {
-      let accessToken = localStorage.getItem("jwt");
+  methods: {
 
-      if (accessToken) {
-        return { Authorization: "Bearer " + accessToken };
-      } else {
-        return {};
-      }
-  },
-    created() {
-      try {
-        let token = authHeader().Authorization;
-  
-        if(token) {
-          this.isLoggedIn = true;
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    },
   }
-}
+};
 </script>
 
 <style>
