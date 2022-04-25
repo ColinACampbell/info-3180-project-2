@@ -50,7 +50,7 @@ export default {
         },
     },
     methods: {
-         getCar() {
+        getCar() {
              fetch(`${import.meta.env.VITE_API_URL}/api/cars/${carID()}`, {method: 'GET', 
                 headers: {'Content-Type': 'application/json'}
                 }).then(function (response) {
@@ -61,7 +61,20 @@ export default {
                 }).catch(function (error) {
                     console.log(error);
                 });
-                }
+                },
+        addToFavourites() {
+            if (favButtonActive){
+                fetch(`${import.meta.env.VITE_API_URL}/api/cars/${carID()}/favourites`, {method: 'POST', 
+                headers: {'Content-Type': 'application/json'}
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    console.log(data);
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+        },
     },
    
 }
