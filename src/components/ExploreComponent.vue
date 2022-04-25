@@ -35,34 +35,21 @@
     <div class="car-cards card-group">
       <ul class="cars-lst">
         <li v-for="car in cars" :key="car.id">
-          <div
-            class="card shadow-sm p-3 mb-5 bg-body rounded"
-            style="width: 25rem"
-          >
-            <img
-              :src="API_URL + car.photo"
-              alt="car"
-              class="card-img-top"
-            />
+          <div class="card shadow-sm p-3 mb-5 bg-body rounded" style="width:20rem">
+            <img :src="API_ENDPOINT + '/' + car.photo" alt="car" class="card-img-top"/>
             <div class="card-body">
-              <div class="row">
-                <div class="col">
-                  <p class="year-and-make card-text fw-bolder">
-                    {{ car.year + " " + car.make }}
-                  </p>
-                </div>
-                <div class="col">
-                  <p class="btn btn-warning">
-                    <i class="fa-solid fa-tag"></i> ${{ car.price }}
-                  </p>
-                </div>
-              </div>
+                  <div class="row">
+                    <div class="col">
+                      <p class="year-and-make card-text fw-bolder">{{ car.year + " " + car.make }}</p>
+                    </div>
+                    <div class="col">
+                      <p class="btn btn-warning text-light"><i class="fa-solid fa-tag"></i> ${{ car.price }}</p>
+                    </div>
+                  </div>
 
               <p class="car-model text-muted">{{ car.model }}</p>
             </div>
-            <button @click="carDetail(car.id)" class="btn btn-primary w-100">
-              View More Details
-            </button>
+            <button @click="carDetail(car.id)" class="btn btn-primary w-100 text-light">View More Details</button>
           </div>
         </li>
       </ul>
@@ -85,11 +72,13 @@ export default {
       .then(function (data) {
         let carCount = data.length;
         let i = carCount - 1;
+        let count = 0;
         while (carCount > 0) {
           self.cars.push(data[i]);
           i--;
           carCount--;
-          if (i == 2) break;
+          count ++
+          if (count == 3) break;
         }
         console.log(self.cars);
       });
@@ -101,7 +90,7 @@ export default {
     };
   },
   computed: {
-    API_URL: function () {
+    API_ENDPOINT: function () {
       return import.meta.env.VITE_API_URL
     },
   },
