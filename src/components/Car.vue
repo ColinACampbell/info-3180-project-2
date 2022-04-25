@@ -53,21 +53,21 @@
 </template>
 
 <script>
+import headerUtils from "./../util/header.util";
+
 export default {
   mounted() {
-    console.log(this.$router.query);
-  },
-  created() {
+    const carID = parseInt(this.$route.params.id)
+    const self = this
     fetch(`${import.meta.env.VITE_API_URL}/api/cars/${carID}`, {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: headerUtils.authHeader()
     })
       .then(function (response) {
         return response.json();
       })
       .then(function (data) {
-        console.log(data);
-        this.car = data;
+        self.car = data;
       })
       .catch(function (error) {
         console.log(error);
