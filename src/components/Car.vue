@@ -45,7 +45,7 @@
         <div class="col d-flex justify-content-end">
           <button class="btn-round">
             <i
-              :class="[favButtonActive ? 'fa-solid' : 'fa-regular']"
+              :class="[isFav ? 'fa-solid' : 'fa-regular']"
               @click="makeFav()"
               class="fa fa-heart"
             ></i>
@@ -82,7 +82,7 @@ export default {
   },
   data() {
     return {
-      favButtonActive: false,
+      isFav: false,
       car: {},
       carFavs: [],
     };
@@ -107,7 +107,7 @@ export default {
         const data = await response.json();
         self.carFavs = data.map((fav) => fav.id);
         if (self.carFavs.includes(self.car.id)) {
-          self.favButtonActive = true;
+          self.isFav = true;
           console.log("Fav !");
         }
       });
@@ -122,9 +122,8 @@ export default {
           headers: headerUtils.authHeader(),
         }
       ).then((response) => {
-        console.log(response.status);
         if (response.status === 201)
-          self.favButtonActive = !self.favButtonActive
+          self.isFav = !self.isFav
       });
     },
   },
