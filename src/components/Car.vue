@@ -46,7 +46,7 @@
           <button class="btn-round">
             <i
               :class="[favButtonActive ? 'fa-solid' : 'fa-regular']"
-              @click="favButtonActive = !favButtonActive"
+              @click="makeFav()"
               class="fa fa-heart"
             ></i>
           </button>
@@ -63,6 +63,7 @@ export default {
   mounted() {
     const carID = parseInt(this.$route.params.id);
     const self = this;
+
     fetch(`${import.meta.env.VITE_API_URL}/api/cars/${carID}`, {
       method: "GET",
       headers: headerUtils.authHeader(),
@@ -72,15 +73,18 @@ export default {
       })
       .then(function (data) {
         self.car = data;
+        self.checkFav()
       })
       .catch(function (error) {
         console.log(error);
       });
+
   },
   data() {
     return {
       favButtonActive: false,
-      car: [],
+      car: {},
+      carFavs: [],
     };
   },
   computed: {
@@ -92,7 +96,37 @@ export default {
     },
   },
   methods: {
+    checkFav() {
+      const user = JSON.parse(localStorage.user ?? "{}");
+      const self = this
+      // Get favorite and check
+      fetch(`${import.meta.env.VITE_API_URL}/api/users/${user.id}/favourites`, {
+        method: "GET",
+        headers: headerUtils.authHeader(),
+      }).then(async (response) => {
+        const data = await response.json();
+        self.carFavs = data.map((fav) => fav.id);
+        if (self.carFavs.includes(self.car.id)) {
+          self.favButtonActive = true;
+          console.log("Fav !");
+        }
+      });
+    },
     getCar() {},
+    makeFav() {
+      const self = this
+      fetch(
+        `${import.meta.env.VITE_API_URL}/api/cars/${this.car.id}/favourites`,
+        {
+          method: "POST",
+          headers: headerUtils.authHeader(),
+        }
+      ).then((response) => {
+        console.log(response.status);
+        if (response.status === 201)
+          self.favButtonActive = !self.favButtonActive
+      });
+    },
   },
 };
 </script>

@@ -55,7 +55,9 @@ export default {
 
           if (response.status == 200) {
             const jwt = data.token;
+            const user = data.user
             localStorage.setItem("jwt", jwt);
+            localStorage.setItem("user",JSON.stringify(user))
             this.$router.push("/explore");
           } else {
             self.errors = data.message;

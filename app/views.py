@@ -97,7 +97,9 @@ def login():
 
             if user is not None and check_password_hash(user.password, password):
                 encoded_jwt = createToken(user)
-                return {"message": [], "token": encoded_jwt}, 200
+                return {"message": [], "token": encoded_jwt,
+                        "user": user
+                        }, 200
             else:
                 return {"message": ['Incorrect credentials']}, 401
     else:
@@ -137,7 +139,8 @@ def register():
             return {"message": ['User exists']}, 409
     else:
         return {
-            "message": form_errors(createUserForm)
+            "message": form_errors(createUserForm),
+            "user": user
         }, 400
 
 
@@ -194,11 +197,13 @@ def addcars():
                 'message': form_errors(addCarForm)
             }, 400
 
+
 @app.route('/uploads/<filename>')
 def uploadimg(filename):
     upimg = send_from_directory(os.path.join(os.getcwd(),
-    app.config['UPLOAD_FOLDER']), filename)
+                                             app.config['UPLOAD_FOLDER']), filename)
     return upimg
+
 
 @app.route('/api/cars/<car_id>/favourites', methods=['POST'])
 @requires_auth
@@ -206,7 +211,7 @@ def favcar(car_id):
     if (Favourite.query.filter_by(carId=car_id).first() != None):
         db.session.delete(Favourite.query.filter_by(carId=car_id).first())
         db.session.commit()
-        return {}
+        return {},201
     else:
         car = Car.query.filter_by(id=car_id).first()
 
@@ -277,16 +282,18 @@ def add_header(response):
     to we could change max-age to 600 seconds which would be 10 minutes.
     """
     response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-    
+    response.headers.add('Access-Control-Allow-Headers',
+                         'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods',
+                         'GET,PUT,POST,DELETE,OPTIONS')
+
     return response
 
 
 @app.errorhandler(404)
 def page_not_found(error):
     """Custom 404 page."""
-    return {"message":['Endpoint not found']}
+    return {"message": ['Endpoint not found']}
 
 
 if __name__ == '__main__':
