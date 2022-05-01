@@ -26,6 +26,11 @@
                 <RouterLink class="nav-link" to="/explore">Explore</RouterLink>
               </li>
               <li class="nav-item px-3">
+                <RouterLink class="nav-link" :to="USER_ROUTE"
+                  >My Account</RouterLink
+                >
+              </li>
+              <li class="nav-item px-3">
                 <RouterLink class="nav-link" to="/cars/new"
                   >Add a Car</RouterLink
                 >
@@ -68,6 +73,12 @@ export default {
       }
     } catch (error) {
       console.log(error);
+    }
+  },
+  computed:{
+    USER_ROUTE : () => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    return `/users/${user.id}`
     }
   },
   data() {
