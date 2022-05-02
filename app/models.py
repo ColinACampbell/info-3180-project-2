@@ -20,7 +20,7 @@ class Car(db.Model):
     price: int
     photo: string
 
-    __tablename__ = 'cars'
+    __tablename__ = 'app_cars'
 
     id = db.Column(db.Integer, primary_key=True)
     userId = db.Column(db.Integer)
