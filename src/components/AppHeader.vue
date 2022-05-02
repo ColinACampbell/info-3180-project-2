@@ -24,7 +24,6 @@
                 <RouterLink class="nav-link" to="/explore">Explore</RouterLink>
               </li>
               <li class="nav-item px-3">
-<<<<<<< HEAD
                 <RouterLink class="nav-link" :to="USER_ROUTE"
                   >My Account</RouterLink
                 >
@@ -33,9 +32,6 @@
                 <RouterLink class="nav-link" to="/cars/new"
                   >Add a Car</RouterLink
                 >
-=======
-                <RouterLink class="nav-link" to="/cars/new">Add a Car</RouterLink>
->>>>>>> 89221184fa0bb281dc81057bb7b7f075b822fc78
               </li>
             </div>
             <div :class="[isLoggedIn ? 'd-none' : '']" class="d-flex flex-row">
