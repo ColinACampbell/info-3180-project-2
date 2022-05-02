@@ -45,8 +45,13 @@
         <div class="col d-flex justify-content-end">
           <button class="btn-round">
             <i
+<<<<<<< HEAD
               :class="[isFav ? 'fa-solid' : 'fa-regular']"
               @click="makeFav()"
+=======
+              :class="[favButtonActive ? 'fa-solid' : 'fa-regular']"
+              @click="favCar() isFav()"
+>>>>>>> 89221184fa0bb281dc81057bb7b7f075b822fc78
               class="fa fa-heart"
             ></i>
           </button>
@@ -110,9 +115,10 @@ export default {
           self.isFav = true;
           console.log("Fav !");
         }
-      });
+x      });
     },
     getCar() {},
+<<<<<<< HEAD
     makeFav() {
       const self = this
       fetch(
@@ -126,7 +132,47 @@ export default {
           self.isFav = !self.isFav
       });
     },
+=======
+    isFav() {
+        let self = this;
+            fetch(`${import.meta.env.VITE_API_URL}/api/users/${userID()}/favourites`,
+            {
+            headers: authHeader()
+            }
+        ).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            console.log(data);
+            self.currentCars = data.currentCars;
+            for (car in currentCars) {
+            if (car.id == carID) {
+                count = 1
+            }
+            if (count > 0) {
+                favButtonActive: true
+            } else {
+                favButtonActive: false
+            }
+        });
+
+    }
+>>>>>>> 89221184fa0bb281dc81057bb7b7f075b822fc78
   },
+  favCar() {
+    let self = this;
+            fetch(`${import.meta.env.VITE_API_URL}/api/cars/${carID}/favourites`, methods=['POST'],
+            {
+            headers: authHeader()
+            }
+        ).then(function(response) {
+            return response.json();
+        }).then(function(data) {
+            console.log(data);
+        });
+
+    }
+  }
+
 };
 </script>
 
