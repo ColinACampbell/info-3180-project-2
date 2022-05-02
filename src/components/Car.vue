@@ -45,8 +45,13 @@
         <div class="col d-flex justify-content-end">
           <button class="btn-round">
             <i
+<<<<<<< HEAD
+              :class="[isFav ? 'fa-solid' : 'fa-regular']"
+              @click="makeFav()"
+=======
               :class="[favButtonActive ? 'fa-solid' : 'fa-regular']"
               @click="favCar() isFav()"
+>>>>>>> 89221184fa0bb281dc81057bb7b7f075b822fc78
               class="fa fa-heart"
             ></i>
           </button>
@@ -63,6 +68,7 @@ export default {
   mounted() {
     const carID = parseInt(this.$route.params.id);
     const self = this;
+
     fetch(`${import.meta.env.VITE_API_URL}/api/cars/${carID}`, {
       method: "GET",
       headers: headerUtils.authHeader(),
@@ -72,17 +78,18 @@ export default {
       })
       .then(function (data) {
         self.car = data;
+        self.checkFav()
       })
       .catch(function (error) {
         console.log(error);
       });
+
   },
   data() {
     return {
-      favButtonActive: false,
-      car: [],
-      currentCars: [],
-      count: 0
+      isFav: false,
+      car: {},
+      carFavs: [],
     };
   },
   computed: {
@@ -94,7 +101,38 @@ export default {
     },
   },
   methods: {
+    checkFav() {
+      const user = JSON.parse(localStorage.user ?? "{}");
+      const self = this
+      // Get favorite and check
+      fetch(`${import.meta.env.VITE_API_URL}/api/users/${user.id}/favourites`, {
+        method: "GET",
+        headers: headerUtils.authHeader(),
+      }).then(async (response) => {
+        const data = await response.json();
+        self.carFavs = data.map((fav) => fav.id);
+        if (self.carFavs.includes(self.car.id)) {
+          self.isFav = true;
+          console.log("Fav !");
+        }
+x      });
+    },
     getCar() {},
+<<<<<<< HEAD
+    makeFav() {
+      const self = this
+      fetch(
+        `${import.meta.env.VITE_API_URL}/api/cars/${this.car.id}/favourites`,
+        {
+          method: "POST",
+          headers: headerUtils.authHeader(),
+        }
+      ).then((response) => {
+        if (response.status === 201)
+          self.isFav = !self.isFav
+      });
+    },
+=======
     isFav() {
         let self = this;
             fetch(`${import.meta.env.VITE_API_URL}/api/users/${userID()}/favourites`,
@@ -118,6 +156,7 @@ export default {
         });
 
     }
+>>>>>>> 89221184fa0bb281dc81057bb7b7f075b822fc78
   },
   favCar() {
     let self = this;

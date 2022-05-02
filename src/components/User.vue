@@ -50,7 +50,7 @@
                 <span class="name-and-price">
                   <p class="year-and-make">{{ car.year + " " + car.make }}</p>
                   <span class="car-price">
-                    <img class="tags" src="../assets/tag.svg" alt="tag" />
+                    <img class="tags" src="" alt="tag" />
                     <p>${{ car.price }}</p>
                   </span>
                 </span>

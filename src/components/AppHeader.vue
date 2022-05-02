@@ -24,7 +24,18 @@
                 <RouterLink class="nav-link" to="/explore">Explore</RouterLink>
               </li>
               <li class="nav-item px-3">
+<<<<<<< HEAD
+                <RouterLink class="nav-link" :to="USER_ROUTE"
+                  >My Account</RouterLink
+                >
+              </li>
+              <li class="nav-item px-3">
+                <RouterLink class="nav-link" to="/cars/new"
+                  >Add a Car</RouterLink
+                >
+=======
                 <RouterLink class="nav-link" to="/cars/new">Add a Car</RouterLink>
+>>>>>>> 89221184fa0bb281dc81057bb7b7f075b822fc78
               </li>
             </div>
             <div :class="[isLoggedIn ? 'd-none' : '']" class="d-flex flex-row">
@@ -49,6 +60,23 @@
 <script>
 import { RouterLink } from "vue-router";
 export default {
+  created() {
+    try {
+      let token = headerUtils.authHeader().Authorization;
+      console.log("Runs");
+      if (token) {
+        this.isLoggedIn = true;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  computed:{
+    USER_ROUTE : () => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    return `/users/${user.id}`
+    }
+  },
   data() {
     return {
       isLoggedIn: false,

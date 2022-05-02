@@ -86,8 +86,12 @@ export default {
       }).then(async (response) => {
         const data = await response.json();
         if (response.status == 201) {
+          const user = data.user;
+
           const jwt = data.token;
           localStorage.setItem("jwt", jwt);
+          localStorage.setItem("user", JSON.stringify(user));
+
           this.$router.push("/explore");
         } else {
           self.errors = data.message;
