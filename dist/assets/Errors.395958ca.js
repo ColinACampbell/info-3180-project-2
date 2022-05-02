@@ -1,1 +1,0 @@
-import{_ as a,o as e,c as r,F as n,f as o,t as c,g as _}from"./index.b022a2b4.js";const i={props:["errors"]},l={key:0};function d(m,p,t,u,f,g){return t.errors.length>0?(e(),r("div",l,[(e(!0),r(n,null,o(t.errors,s=>(e(),r("div",{key:s.name,class:"alert alert-danger"},c(s),1))),128))])):_("",!0)}var h=a(i,[["render",d]]);export{h as E};
