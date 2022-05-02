@@ -68,7 +68,7 @@ class Favourite(db.Model):
 @dataclass
 class User(db.Model):
 
-    __tablename__ = 'users'
+    __tablename__ = 'app_users'
 
     id :int
     username :string
