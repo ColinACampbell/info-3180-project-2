@@ -68,9 +68,15 @@ def requires_auth(f):
 
 
 @app.route('/')
-@requires_auth
 def index():
     return send_file(os.path.join('../dist/', 'index.html'))
+
+
+@app.route('/assets/<filename>')
+def static_assets(filename):
+
+    print(os.path.join('../dist/assets',filename))
+    return send_file(os.path.join('../dist/assets', filename))
 
 ###
 # The functions below should be applicable to all Flask apps.
@@ -78,7 +84,6 @@ def index():
 
 
 @app.route("/api/auth/logout", methods=["POST"])
-@login_required
 def logout():
     logout_user()
     flash('You have been logged out.', 'danger')
@@ -211,7 +216,7 @@ def favcar(car_id):
     if (Favourite.query.filter_by(carId=car_id).first() != None):
         db.session.delete(Favourite.query.filter_by(carId=car_id).first())
         db.session.commit()
-        return {},201
+        return {}, 201
     else:
         car = Car.query.filter_by(id=car_id).first()
 
