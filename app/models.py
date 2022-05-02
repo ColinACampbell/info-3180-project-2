@@ -88,7 +88,7 @@ class User(db.Model):
     biography = db.Column(db.String(500))
     photo = db.Column(db.String(100))
     date_joined = db.Column(db.DateTime)
-
+    
     def _init__(self, username, password, name, email, location, biography, photo, date_joined):
         self.username = username
         self.password = generate_password_hash(
