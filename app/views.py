@@ -67,14 +67,13 @@ def requires_auth(f):
 ###
 
 
-@app.route('/*')
+@app.route('/')
 def index():
     return send_file(os.path.join('../dist/', 'index.html'))
 
 
 @app.route('/assets/<filename>')
 def static_assets(filename):
-
     print(os.path.join('../dist/assets',filename))
     return send_file(os.path.join('../dist/assets', filename))
 
