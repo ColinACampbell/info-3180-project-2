@@ -74,7 +74,7 @@ def index():
 
 @app.route('/assets/<filename>')
 def static_assets(filename):
-    print(os.path.join('../dist/assets',filename))
+    print(os.path.join('../dist/assets', filename))
     return send_file(os.path.join('../dist/assets', filename))
 
 ###
@@ -105,7 +105,7 @@ def login():
                         "user": user
                         }, 200
             else:
-                return {"message": ['Incorrect credentials']},401
+                return {"message": ['Incorrect credentials']}, 401
     else:
         return {
             "message": form_errors(form)
@@ -138,13 +138,13 @@ def register():
 
             encoded_jwt = createToken(user)
 
-            return {"message": [], "token": encoded_jwt},201
+            return {"message": [], "token": encoded_jwt, "user": user
+                    }, 201
         else:
             return {"message": ['User exists']}, 409
     else:
         return {
             "message": form_errors(createUserForm),
-            "user": user
         }, 400
 
 
@@ -158,10 +158,12 @@ def get_csrf():
 def cardetail(car_id):
     return jsonify(Car.query.filter_by(id=car_id).first())
 
+
 @app.route('/api/cars', methods=['GET'])
 @requires_auth
 def returncars():
-    return  jsonify(Car.query.all())
+    return jsonify(Car.query.all())
+
 
 @app.route('/api/cars', methods=['POST'])
 @requires_auth
@@ -183,20 +185,21 @@ def addcars():
             price = addCarForm.price.data
             carPhoto = addCarForm.carPhoto.data
 
-            filename  = os.path.join(
+            filename = os.path.join(
                 app.config['UPLOAD_FOLDER'], secure_filename(carPhoto.filename))
 
             carPhoto.save(filename)
 
-            mycar = Car(g.current_user['id'],description,make,model,colour,year,transmission,carType,price,filename)
+            mycar = Car(g.current_user['id'], description, make, model,
+                        colour, year, transmission, carType, price, filename)
             db.session.add(mycar)
             db.session.commit()
 
-            return jsonify(Car.query.filter_by(id=mycar.id).first()),201
+            return jsonify(Car.query.filter_by(id=mycar.id).first()), 201
         else:
             return {
                 'message': form_errors(addCarForm)
-            },400
+            }, 400
 
 
 @app.route('/uploads/<filename>')
@@ -209,20 +212,20 @@ def uploadimg(filename):
 @app.route('/api/cars/<car_id>/favourites', methods=['POST'])
 @requires_auth
 def favcar(car_id):
-    if (Favourite.query.filter_by(carId=car_id).first() != None) :
+    if (Favourite.query.filter_by(carId=car_id).first() != None):
         db.session.delete(Favourite.query.filter_by(carId=car_id).first())
         db.session.commit()
         return {}, 201
     else:
         car = Car.query.filter_by(id=car_id).first()
 
-        if (car == None) :
-            return {'message':'Car does not exists'},400
+        if (car == None):
+            return {'message': 'Car does not exists'}, 400
 
-        fav = Favourite(g.current_user['id'],car_id)
+        fav = Favourite(g.current_user['id'], car_id)
         db.session.add(fav)
         db.session.commit()
-        return jsonify(fav),201 # TODO Return the car
+        return jsonify(fav), 201  # TODO Return the car
 
 
 @app.route('/api/searh', methods=['GET'])
@@ -234,8 +237,8 @@ def searchcars():
 @requires_auth
 def userdetails(user_id):
     user = User.query.filter_by(id=user_id).first()
-    if (user == None) :
-        return {'message':['User Does not exists']},400
+    if (user == None):
+        return {'message': ['User Does not exists']}, 400
     return jsonify(user)
 
 
@@ -244,10 +247,10 @@ def userdetails(user_id):
 def userfavs(user_id):
     favs = Favourite.query.filter_by(userId=user_id).all()
     fav_cars = []
-    for fav in favs :
+    for fav in favs:
         fav_car = Car.query.filter_by(id=fav.carId).first()
         fav_cars.append(fav_car)
-    
+
     return jsonify(fav_cars)
 
 # Here we define a function to collect form errors from Flask-WTF

@@ -55,6 +55,7 @@
 
 <script>
 import { RouterLink } from "vue-router";
+import headerUtils from "./../util/header.util"
 export default {
   created() {
     try {
@@ -69,7 +70,8 @@ export default {
   },
   computed:{
     USER_ROUTE : () => {
-    const user = JSON.parse(localStorage.getItem('user'))
+    const user =JSON.parse(localStorage.getItem('user') ?? '{}')
+    console.log(localStorage.getItem('user'))
     return `/users/${user.id}`
     }
   },
